@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAUNCHPAD STUDIO | Custom, High-Speed Websites Built to Grow Your Business</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">LAUNCHPAD<span>//STUDIO</span></a>
+            
+            <button class="nav-toggle" aria-label="Toggle Menu" id="navToggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="#mission">Our Approach</a>
+                <a href="#work">Ready Designs</a>
+                <a href="#contact" class="btn btn-nav-stark">Start Your Project</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="container hero-layout-grid">
+                <div class="hero-text-block">
+                    <span class="hero-ticker">🔥 FAST, LIGHTWEIGHT, CUSTOM CODE</span>
+                    <h1>We build websites that turn visitors into customers.</h1>
+                    <p class="hero-lead">No generic templates. No slow, clunky page builders. Just clean, hand-coded websites meticulously designed to rank higher, load instantly, and grow your local business.</p>
+                    <div class="hero-cta-group">
+                        <a href="#work" class="btn btn-stark-primary">See Our Designs</a>
+                        <a href="#mission" class="btn btn-stark-link">Why Speed Matters ↓</a>
+                    </div>
+                </div>
+                <div class="hero-stats-block">
+                    <div class="stat-box">
+                        <div class="stat-num" id="templateCounter">00</div>
+                        <div class="stat-label">Ready-to-Customize Website Frameworks</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-num">&lt;1s</div>
+                        <div class="stat-label">Average Page Load Time (Blazing Fast)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mission" class="mission-section">
+            <div class="container mission-grid">
+                <div class="grid-left-sticky">
+                    <span class="section-indicator">// THE LAUNCHPAD STANDARD</span>
+                    <h2>Engineered to win more local customers.</h2>
+                </div>
+                <div class="grid-right-content">
+                    <div class="philosophy-block">
+                        <h4>The Local Business Problem</h4>
+                        <p>Most small businesses are trapped using slow, bloated WordPress templates or cookie-cutter builders. They look generic, lag on mobile devices, and ultimately lose you money. We fix that by creating custom, lightweight web layers that put your business on a level playing field with massive national brands.</p>
+                    </div>
+                    <div class="philosophy-block">
+                        <h4>Built Like Performance Machines</h4>
+                        <p>We treat code like premium engineering. Every line we write serves a dedicated business purpose. By using pure, clean frontend architecture, we protect your site from random plugin crashes, security vulnerabilities, or sluggish loads that frustrate your clients.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="work" class="work-section">
+            <div class="container">
+                <div class="work-section-header">
+                    <span class="section-indicator">// CHOOSE YOUR FRAMEWORK</span>
+                    <h2>The Ready-to-Go Layout Vault</h2>
+                    <p>A showcase of our high-performance blueprints built specifically for local commercial niches.</p>
+                </div>
+
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all">All Industries</button>
+                    <button class="filter-btn" data-filter="conversion">Booking & Leads</button>
+                    <button class="filter-btn" data-filter="visual">Visual & Creative</button>
+                    <button class="filter-btn" data-filter="invite">Event E-Invitations</button>
+                </div>
+
+                <div class="work-matrix-grid" id="projectMatrix">
+                    </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="container contact-max-width">
+                <div class="text-center" style="margin-bottom: 48px;">
+                    <span class="section-indicator">// WORK WITH US</span>
+                    <h2>Let's Build Your Website</h2>
+                    <p style="color: #999999; margin-top: 8px;">Tell us what you are looking for, and let's launch an asset that works for your business.</p>
+                </div>
+
+                <form id="agencyForm" class="agency-intake-form">
+                    <div class="stark-input-row">
+                        <input type="text" id="bizName" placeholder="Your Name / Business Name" required>
+                        <input type="email" id="bizEmail" placeholder="Your Email Address" required>
+                    </div>
+                    <div class="stark-input-group">
+                        <select id="bizGoal" required>
+                            <option value="" disabled selected>What is your main objective?</option>
+                            <option value="custom">Launch a Pre-Built Vault Framework</option>
+                            <option value="fullstack">Build a Custom Full-Stack Data App</option>
+                            <option value="consult">Book an Optimization Strategy Call</option>
+                        </select>
+                    </div>
+                    <div class="stark-input-group">
+                        <textarea id="bizBrief" rows="5" placeholder="Tell us about your business goals, target audience, specific features you need, or project timeline..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-stark-submit">Send Project Details →</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <p>&copy; 2026 LAUNCHPAD STUDIO. All Rights Reserved.</p>
+            <p class="attribution">Developed by <a href="mailto:the.launchpaddev@gmail.com">The Launchpad Dev</a></p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

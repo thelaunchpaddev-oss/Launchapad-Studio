@@ -1,0 +1,165 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- DOM TARGET HOOKS ---
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const matrixGrid = document.getElementById('projectMatrix');
+    const templateCounter = document.getElementById('templateCounter');
+    const agencyForm = document.getElementById('agencyForm');
+
+    // ==========================================================================
+    // 1. DIGITAL CMS: FETCH AND RENDER DATABASE WORK FRAMEWORKS
+    // ==========================================================================
+    async function fetchLiveFrameworks() {
+        if (!matrixGrid) return;
+
+        try {
+            // Retrieve dynamic template blueprints from your API engine
+            const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`);
+            const result = await response.json();
+
+            if (!result.success || result.count === 0) {
+                matrixGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#999; padding:3rem;">Our current design collection is being refreshed. Stay tuned!</div>`;
+                if (templateCounter) templateCounter.textContent = "00";
+                return;
+            }
+
+            // A. Sync the counter stat module badge automatically
+            if (templateCounter) {
+                templateCounter.textContent = String(result.count).padStart(2, '0');
+            }
+
+            // B. Map database records into dynamic preview layout cards
+            renderFrameworkGrid(result.data);
+
+        } catch (error) {
+            console.error('CMS Content Sync Fault:', error);
+            matrixGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ff3366; padding:2rem; font-family:monospace;">⚠️ CONNECTION ERROR: Unable to load design matrix.</div>`;
+        }
+    }
+
+function renderFrameworkGrid(templates) {
+    if (!matrixGrid) return;
+    
+    matrixGrid.innerHTML = templates.map(tpl => {
+        // Formulate standard stark action link row
+        const actionButton = tpl.livePreviewUrl 
+            ? `<a href="${tpl.livePreviewUrl}" target="_blank" rel="noopener noreferrer" class="matrix-btn-blueprint">Explore Live Demo ↗</a>`
+            : `<span class="matrix-fallback-tag">Blueprint Deploying Soon</span>`;
+
+        // ⚡ DYNAMIC THUMBNAIL LOGIC: Swap template styling rules based on payload properties
+        const visualFrameStyle = tpl.thumbnailUrl 
+            ? `background: url('${tpl.thumbnailUrl}') center/cover no-repeat; border-bottom: 1px solid var(--border-stark);` 
+            : `background: ${tpl.gradientStyle}; color: #ffffff;`;
+
+        // Hide overlay text if we are rendering a raw product screenshot preview
+        const bannerMarkup = tpl.thumbnailUrl 
+            ? '' 
+            : escapeText(tpl.bannerText || '⚡ PRE-BUILT VAULT');
+
+        return `
+            <div class="matrix-item" data-category="${tpl.category}">
+                <div>
+                    <div class="item-visual-frame" style="${visualFrameStyle}">
+                        ${bannerMarkup}
+                    </div>
+                    <div class="item-data-pane">
+                        <span class="item-tag">${escapeText(tpl.tag)}</span>
+                        <h3>${escapeText(tpl.title)}</h3>
+                        <p>${escapeText(tpl.description)}</p>
+                    </div>
+                </div>
+                <div class="item-action-pane">
+                    ${actionButton}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Reinitialize your layout filtration matrix listeners
+    initializeFilterEngine();
+}
+
+    // ==========================================================================
+    // 2. INTERACTIVE PORTFOLIO FILTER ENGINE
+    // ==========================================================================
+function initializeFilterEngine() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const matrixItems = document.querySelectorAll('.matrix-item');
+
+    if (!filterButtons.length || !matrixItems.length) return;
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 1. Swap active architectural styling line classes
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const selectedFilter = btn.getAttribute('data-filter');
+
+            // 2. Evaluate layout elements against selection targets
+            matrixItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+
+                if (selectedFilter === 'all' || itemCategory === selectedFilter) {
+                    item.style.display = 'flex'; // Restores brutalist block presence
+                } else {
+                    item.style.display = 'none';  // Evicts layout item cleanly from viewport
+                }
+            });
+        });
+    });
+}
+
+    // ==========================================================================
+    // 3. CLIENT BRIEF INTAKE FORM TRANSMITTER (POST PIPELINE)
+    // ==========================================================================
+    if (agencyForm) {
+        agencyForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Blocks disruptive native window reload loops
+
+            // Extract data profiles directly from layout nodes
+            const companyName = document.getElementById('bizName').value.trim();
+            const corporateEmail = document.getElementById('bizEmail').value.trim();
+            const coreObjective = document.getElementById('bizGoal').value;
+            const projectBrief = document.getElementById('bizBrief').value.trim();
+
+            if (!companyName || !corporateEmail || !coreObjective) {
+                alert('Please populate all required form tracks.');
+                return;
+            }
+
+            // Formulate standard JSON payload mapped cleanly to your Mongoose Schema keys
+            const payload = { companyName, corporateEmail, coreObjective, projectBrief };
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(`🚀 TRANSMISSION SUCCESSFUL\n\nYour layout specifications have been written directly to the database layer.\nReference ID: ${result.dataId}`);
+                    agencyForm.reset(); // Safely clear form states upon validated database entry
+                } else {
+                    alert(`❌ INGESTION REJECTED: ${result.message}`);
+                }
+
+            } catch (error) {
+                console.error('Network Pipeline Fault:', error);
+                alert('❌ TRANSMISSION FAILED: Ensure your launchpad-core-api backend engine is active on port 5000.');
+            }
+        });
+    }
+
+    // Text sanitization layer shielding output loops
+    function escapeText(str) {
+        if (!str) return '';
+        return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
+    }
+
+    // Initialize content fetching loop instantly on startup
+    fetchLiveFrameworks();
+});

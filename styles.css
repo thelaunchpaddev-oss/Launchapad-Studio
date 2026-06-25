@@ -1,0 +1,580 @@
+/* ==========================================================================
+   1. PREMIUM STUDIO TOKENS & RESET (Monochrome & Technical Contrast)
+   ========================================================================== */
+:root {
+    --primary-color: #000000;       /* Absolute Black Onyx */
+    --text-dark: #0a0a0a;           /* Deep Editorial Ink */
+    --text-muted: #666666;          /* Technical Industrial Steel */
+    --bg-light: #fcfcfc;            /* Crisp High-End Studio Matte White */
+    --bg-alt: #f4f4f4;              /* Subtle Engineering Grid Line Accent */
+    --border-stark: #000000;        /* Bold, rigid architectural strokes */
+    --border-light: rgba(0, 0, 0, 0.08);
+    
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --transition-speed: 0.25s;
+    --container-max-width: 1340px;  /* Expansive tech layout window */
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--bg-light);
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   2. REUSABLE INFRASTRUCTURE UTILITIES
+   ========================================================================== */
+.container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 48px;
+}
+@media (max-width: 768px) {
+    .container { padding: 0 24px; }
+}
+
+.text-center { text-align: center; }
+
+.section-indicator {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+}
+
+/* Stark Rigid Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border-radius: 0; /* Pure architectural sharp edges */
+    transition: all var(--transition-speed) ease;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-stark-primary {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    padding: 16px 36px;
+    border: 1px solid var(--primary-color);
+}
+.btn-stark-primary:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+}
+
+.btn-stark-link {
+    background: transparent;
+    color: var(--text-dark);
+    padding: 16px 0;
+}
+.btn-stark-link:hover {
+    padding-left: 8px;
+}
+
+/* ==========================================================================
+   3. STRUCTURAL FIXATION NAVIGATION LAYER
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(252, 252, 252, 0.96);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--border-stark);
+    z-index: 1000;
+    height: 84px;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-dark);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+}
+
+.logo span {
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.nav-menu a {
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.nav-menu a:hover {
+    color: var(--text-muted);
+}
+
+.btn-nav-stark {
+    background: transparent;
+    border: 1px solid var(--border-stark);
+    padding: 10px 20px;
+    font-size: 11px;
+}
+.btn-nav-stark:hover {
+    background-color: var(--border-stark);
+    color: #ffffff;
+}
+
+.nav-toggle { display: none; }
+
+/* ==========================================================================
+   4. TECH-AGENCY EDITORIAL HERO
+   ========================================================================== */
+.hero-section {
+    padding: 200px 0 120px 0;
+    border-bottom: 1px solid var(--border-stark);
+    background-image: linear-gradient(var(--bg-alt) 1px, transparent 1px), linear-gradient(90deg, var(--bg-alt) 1px, transparent 1px);
+    background-size: 100px 100px; /* Subtle technical layout blueprint backing */
+}
+
+.hero-layout-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.hero-ticker {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 4px 12px;
+    margin-bottom: 24px;
+    letter-spacing: 0.1em;
+}
+
+.hero-text-block h1 {
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+}
+
+.hero-lead {
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    max-width: 680px;
+}
+
+.hero-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+/* Metric Display Blocks */
+.hero-stats-block {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.stat-box {
+    border: 1px solid var(--border-stark);
+    background-color: #ffffff;
+    padding: 32px;
+    box-shadow: 6px 6px 0 #000000; /* Distinct non-generic brutalist flat drop shadow */
+}
+
+.stat-num {
+    font-family: var(--font-mono);
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   5. MISSION & CORE OBJECTIVE SECTIONS
+   ========================================================================== */
+.mission-section {
+    padding: 120px 0;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.mission-grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 80px;
+}
+
+.grid-left-sticky {
+    position: sticky;
+    top: 140px;
+    height: max-content;
+}
+
+.grid-left-sticky .section-indicator {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.grid-left-sticky .section-indicator::before {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.grid-left-sticky h2 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.philosophy-block {
+    margin-bottom: 48px;
+}
+.philosophy-block:last-child { margin-bottom: 0; }
+
+.philosophy-block h4 {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.philosophy-block p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: #cccccc;
+}
+
+/* ==========================================================================
+   6. INTERACTIVE REPOSITORY MATRIX FILTERS (Stark Editorial Redesign)
+   ========================================================================== */
+
+   .work-matrix-grid {
+    display: grid;
+    /* ⚡ THE FIXED ALIGNMENT: Strict 380px columns. Zero stretching. */
+    grid-template-columns: repeat(auto-fill, 380px);
+    gap: 32px;
+    width: 100%;
+}
+.work-section {
+    padding: 120px 0;
+    border-bottom: 1px solid var(--border-stark);
+}
+
+.work-section-header {
+    margin-bottom: 48px;
+}
+
+.work-section-header h2 {
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border-light);
+    padding-bottom: 16px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 8px 16px;
+    transition: all var(--transition-speed) ease;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    color: var(--text-dark);
+    box-shadow: 0 2px 0 var(--border-stark);
+}
+
+/* Master Grid Structure */
+.matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 40px;
+    width: 100%;
+}
+
+/* High-End Brutalist Card Element */
+.matrix-item {
+    border: 2px solid var(--border-stark);
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 0; /* Strict architectural lines */
+    position: relative;
+    transition: transform var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hard Solid Drop Shadow Offset on Hover */
+.matrix-item:hover {
+    transform: translate(-6px, -6px);
+    box-shadow: 8px 8px 0 var(--border-stark);
+}
+
+/* Top Banner Accent Frame */
+.item-visual-frame {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    border-bottom: 2px solid var(--border-stark);
+}
+
+/* Data Content Container */
+.item-data-pane {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    display: block;
+}
+
+.item-data-pane h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.item-data-pane p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* Action Area Wrapper */
+.item-action-pane {
+    padding: 0 32px 32px 32px;
+}
+
+/* Stark Primary Launch Button */
+.matrix-btn-blueprint {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 14px;
+    background-color: transparent;
+    border: 1px solid var(--border-stark);
+    color: var(--text-dark) !important;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    border-radius: 0;
+    transition: all var(--transition-speed) ease;
+}
+
+/* Solid Fill Inverse Shift on Hover */
+.matrix-btn-blueprint:hover {
+    background-color: var(--border-stark);
+    color: #ffffff !important;
+}
+
+.matrix-fallback-tag {
+    display: block;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 14px;
+    border: 1px dashed var(--text-muted);
+}
+
+/* ==========================================================================
+   7. STARK TECHNICAL DATA INGESTION
+   ========================================================================== */
+.contact-section {
+    padding: 120px 0;
+    background-color: #0a0a0a;
+    color: #ffffff;
+}
+
+.contact-max-width {
+    max-width: 750px;
+}
+
+.agency-intake-form {
+    margin-top: 48px;
+}
+
+.stark-input-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 580px) {
+    .stark-input-row { flex-direction: column; gap: 20px; }
+}
+
+.stark-input-group {
+    margin-bottom: 20px;
+}
+
+.stark-input-row input, .stark-input-group select, .stark-input-group textarea {
+    width: 100%;
+    padding: 16px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    background-color: #111111;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #ffffff;
+    border-radius: 0;
+    transition: border-color var(--transition-speed) ease;
+}
+
+.stark-input-row input:focus, .stark-input-group select:focus, .stark-input-group textarea:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+.stark-input-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='gray'><polygon points='0,0 10,0 5,5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.btn-stark-submit {
+    width: 100%;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 18px;
+    font-weight: 800;
+}
+.btn-stark-submit:hover {
+    background-color: #000000;
+    color: #ffffff;
+    outline: 1px solid #ffffff;
+}
+
+/* ==========================================================================
+   8. STUDIO FOOTER SYSTEM & BREAKPOINTS
+   ========================================================================== */
+.site-footer {
+    background-color: #000000;
+    color: #666666;
+    padding: 40px 0;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attribution a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* --- High-Trust Studio Breakpoints --- */
+@media (max-width: 992px) {
+    .hero-layout-grid, .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+    .grid-left-sticky { position: static; }
+}
+
+@media (max-width: 768px) {
+    .hero-text-block h1 { font-size: 40px; }
+    .work-matrix-grid { grid-template-columns: 1fr; }
+    .nav-menu { display: none; } /* Safeguards minimalist frame viewports on small viewports */
+    .footer-grid { flex-direction: column; gap: 16px; text-align: center; }
+}

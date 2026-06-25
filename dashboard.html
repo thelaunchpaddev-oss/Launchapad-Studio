@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launchpad Core // Ops Command</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+
+    <div id="authGateOverlay" class="auth-gate-overlay">
+        <div class="auth-gate-card">
+            <h2>🔒 LaunchPad HQ // Access Restricted</h2>
+            <form id="authGateForm">
+                <input type="password" id="gatePasskeyInput" placeholder="ENTER SYSTEM MASTER KEY..." required>
+                <button type="submit" class="btn-auth-submit">Decrypt Console ↗</button>
+            </form>
+            <p id="authGateError" class="auth-error-log"></p>
+        </div>
+    </div>
+
+    <div id="tplModalOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content-card">
+            <div class="modal-header-row">
+                <h3>PUBLISH NEW FRAMEWORK</h3>
+                <button id="closeTplModalBtn" class="btn-close-modal">✕</button>
+            </div>
+            
+            <form id="templateForm" class="cms-form-container">
+                <input type="text" id="tplTitle" placeholder="Template Name (e.g., The Smart Form)" required>
+                <input type="text" id="tplTag" placeholder="Functional Subtitle (e.g., Lead Generation)" required>
+                
+                <select id="tplCategory" required>
+                    <option value="" disabled selected>Select Sorting Category...</option>
+                    <option value="conversion">Booking & Leads</option>
+                    <option value="visual">Visual & Creative</option>
+                    <option value="invite">Event E-Invitations</option>
+                </select>
+
+                <select id="tplGradient">
+                    <option value="linear-gradient(135deg, #00f0ff 0%, #1a2035 100%)">Cyber Cyan Glow</option>
+                    <option value="linear-gradient(135deg, #00ff66 0%, #12141c 100%)">Matrix Green Glow</option>
+                    <option value="linear-gradient(135deg, #ff3366 0%, #1a1e29 100%)">Neon Crimson Glow</option>
+                    <option value="linear-gradient(135deg, #a855f7 0%, #0d0f16 100%)">Royal Violet Glow</option>
+                </select>
+
+                <input type="text" id="vaultTargetUrl" placeholder="Live Preview URL (e.g., https://bakery.vercel.app)" required>
+                <input type="text" id="tplBanner" placeholder="Banner Text (e.g., 📋 LEAD GEN)" value="⚡ PRE-BUILT VAULT">
+                <input type="file" id="tplThumbnailFile" accept="image/*">
+                <textarea id="tplDescription" rows="4" placeholder="Plain-text benefit description written for the customer..." required></textarea>
+                
+                <button type="submit" class="btn-deploy">DEPLOY FRAMEWORK TO ENGINE →</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="app-container">
+    
+    <div class="mobile-header-bar">
+        <div class="brand-title-mobile">LAUNCHPAD<span>.CORE</span></div>
+        <button id="mobileMenuToggleBtn" class="btn-mobile-toggle">MENU ☰</button>
+    </div>
+
+    <aside id="sidebarPanel">
+        <div class="sidebar-main">
+            <div class="brand-title-desktop">LAUNCHPAD<span>.CORE</span></div>
+            <ul class="nav-links" id="navLinksList">
+                <li class="nav-item active" id="tabBriefs">📡 Ingestion Matrix</li>
+                <li class="nav-item" id="tabTemplates">🎨 Template Manager</li>
+                <li class="nav-item" id="tabSecurity">🛡️ Security Manager</li>
+            </ul>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="version-tag">v1.1.0-DYNAMIC_CMS</div>
+            <button id="logoutBtn" class="btn-exit">EXIT CONSOLE ↗</button>
+        </div>
+    </aside>
+
+        <main>
+            <div id="viewBriefs">
+                <header>
+                    <h1>MATRIX OPERATION DASHBOARD // BRIEFS</h1>
+                </header>
+
+                <section class="analytics-ribbon">
+                    <div class="kpi-card blue">
+                        <div class="kpi-label">Total Ingested Tracks</div>
+                        <div id="kpiTotal" class="kpi-value">0</div>
+                    </div>
+                    <div class="kpi-card green">
+                        <div class="kpi-label">Full-Stack Platforms</div>
+                        <div id="kpiFullstack" class="kpi-value">0</div>
+                    </div>
+                    <div class="kpi-card red">
+                        <div class="kpi-label">Active Consultations</div>
+                        <div id="kpiConsult" class="kpi-value">0</div>
+                    </div>
+                </section>
+
+                <section id="matrixGrid" class="matrix-grid">
+                    <div class="empty-state">Compiling system data tracking streams...</div>
+                </section>
+            </div>
+
+            <div id="viewTemplates" style="display: none;">
+                <header>
+                    <h1>FRAMEWORK ASSET MANAGER // CMS</h1>
+                    <button id="openTplModalBtn" class="btn-open-modal">[ + PUBLISH NEW BLU-PRINT ]</button>
+                </header>
+
+                <div class="catalog-display-vault full-width-vault">
+                    <h3>LIVE PRODUCTION MATRIX (<span id="cmsCount" style="color:var(--neon-green)">0</span>)</h3>
+                    <div id="templateCatalogGrid" class="matrix-grid"></div>
+                </div>
+            </div>
+
+            <div id="viewSecurity" style="display: none;">
+                <header>
+                    <h1>SECURITY MANAGEMENT SUITE // HQ CORE</h1>
+                </header>
+
+                <div class="security-features-layout">
+                    <div class="security-lock-card">
+                        <div class="security-card-header-tag">[ ACC-01 // SECURITY KEY ]</div>
+                        <h3>ROTATE MASTER SECURITY KEY</h3>
+                        
+                        <form id="passwordUpdateForm">
+                            <div class="security-input-group">
+                                <label>Current Passcode Identity</label>
+                                <input type="password" id="currentPass" required>
+                            </div>
+                            
+                            <div class="security-input-group">
+                                <label>New Master Key Parameter</label>
+                                <input type="password" id="newPass" required>
+                            </div>
+                            
+                            <button type="submit" class="btn-security-submit">COMMIT PARAMETER CHANGE ↗</button>
+                        </form>
+                        <p id="passUpdateStatus" class="security-status-log" style="display: none;"></p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    
+    <script src="config.js"></script>
+    <script src="dashboard.js?v=1.5"></script>
+</body>
+</html>
