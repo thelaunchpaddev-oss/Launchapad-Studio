@@ -38,30 +38,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 function renderFrameworkGrid(templates) {
-    if (!matrixGrid) return;
+    if (!matrixGrid) return; //
     
     matrixGrid.innerHTML = templates.map(tpl => {
-        // Formulate standard stark action link row
-        const actionButton = tpl.livePreviewUrl 
-            ? `<a href="${tpl.livePreviewUrl}" target="_blank" rel="noopener noreferrer" class="matrix-btn-blueprint">Explore Live Demo ↗</a>`
-            : `<span class="matrix-fallback-tag">Blueprint Deploying Soon</span>`;
+        const actionButton = tpl.livePreviewUrl //[cite: 9]
+            ? `<a href="${tpl.livePreviewUrl}" target="_blank" rel="noopener noreferrer" class="matrix-btn-blueprint">Explore Live Demo ↗</a>` //[cite: 9]
+            : `<span class="matrix-fallback-tag">Blueprint Deploying Soon</span>`; //[cite: 9]
 
-        // ⚡ DYNAMIC THUMBNAIL LOGIC: Swap template styling rules based on payload properties
-        const visualFrameStyle = tpl.thumbnailUrl 
-            ? `background: url('${tpl.thumbnailUrl}') center/cover no-repeat; border-bottom: 1px solid var(--border-stark);` 
-            : `background: ${tpl.gradientStyle}; color: #ffffff;`;
+        // ⚡ OPTIMIZED: Synchronized color fallbacks from dashboard CMS tokens
+        const backgroundGradient = tpl.gradientStyle || 'linear-gradient(135deg, #00f0ff 0%, #1a2035 100%)';
 
-        // Hide overlay text if we are rendering a raw product screenshot preview
-        const bannerMarkup = tpl.thumbnailUrl 
-            ? '' 
-            : escapeText(tpl.bannerText || '⚡ PRE-BUILT VAULT');
+        const imageViewportHTML = tpl.thumbnailUrl //[cite: 9]
+            ? `<div class="image-viewport">
+                   <img src="${tpl.thumbnailUrl}" alt="${escapeText(tpl.title)}" loading="lazy">
+               </div>` //[cite: 9]
+            : `<div class="image-viewport fallback-mesh" style="background: ${backgroundGradient} !important;">
+                   <span class="mesh-banner-text">${escapeText(tpl.bannerText || '⚡ PRE-BUILT VAULT')}</span>
+               </div>`; //[cite: 9]
 
         return `
             <div class="matrix-item" data-category="${tpl.category}">
                 <div>
-                    <div class="item-visual-frame" style="${visualFrameStyle}">
-                        ${bannerMarkup}
-                    </div>
+                    ${imageViewportHTML}
                     <div class="item-data-pane">
                         <span class="item-tag">${escapeText(tpl.tag)}</span>
                         <h3>${escapeText(tpl.title)}</h3>
@@ -72,11 +70,10 @@ function renderFrameworkGrid(templates) {
                     ${actionButton}
                 </div>
             </div>
-        `;
-    }).join('');
+        `; //[cite: 9]
+    }).join(''); //[cite: 9]
 
-    // Reinitialize your layout filtration matrix listeners
-    initializeFilterEngine();
+    initializeFilterEngine(); //[cite: 9]
 }
 
     // ==========================================================================
@@ -132,7 +129,7 @@ function initializeFilterEngine() {
             const payload = { companyName, corporateEmail, coreObjective, projectBrief };
 
             try {
-                const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`, {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/commissions`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -163,3 +160,22 @@ function initializeFilterEngine() {
     // Initialize content fetching loop instantly on startup
     fetchLiveFrameworks();
 });
+
+// --- MOBILE NAVBAR TOGGLE INTERACTION LAYOUT ---
+const navToggle = document.getElementById('navToggle');
+const navMenu = document.getElementById('navMenu');
+
+if (navToggle && navMenu) {
+    navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Close the navigation overlay screen immediately if an internal link tracking tag is selected
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            navToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+}

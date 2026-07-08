@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <!-- Cyber Obsidian Background Square Layer -->
+    <rect width="32" height="32" rx="6" fill="#070A12"/>
+    
+    <!-- High-Voltage Electric Cyan Signal Icon Element -->
+    <path d="M7 24L16 6L25 24H7Z" fill="#00F0FF" />
+    <path d="M13 24L16 18L19 24H13Z" fill="#070A12" />
+</svg>
