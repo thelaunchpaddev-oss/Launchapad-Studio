@@ -219,39 +219,41 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { console.error('CMS Catalog Retrieval Error:', err); }
     }
 
-    function renderCatalogCards(templates) {
-        if (!templates || templates.length === 0) {
-            templateCatalogGrid.innerHTML = `<div class="empty-state">No frameworks currently published.</div>`;
-            return;
-        }
-        templateCatalogGrid.innerHTML = templates.map(tpl => {
-            const adminFrameStyle = tpl.thumbnailUrl 
-                ? `background: url('${tpl.thumbnailUrl}') center/cover no-repeat; height: 60px; border-radius: 4px;` 
-                : `background: ${tpl.gradientStyle}; padding: 0.5rem; font-size: 0.7rem; font-weight: bold; text-align: center; border-radius: 4px; color: #fff; letter-spacing:1px;`;
+function renderCatalogCards(templates) {
+    if (!templateCatalogGrid) return; //[cite: 7]
+    templateCatalogGrid.innerHTML = templates.map(tpl => {
+        // ⚡ THE FIX: Ensures any partial structural file paths get prefixed properly in your admin view
+        const imageUrl = tpl.thumbnailUrl 
+            ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
+            : null;
 
-            const adminBannerMarkup = tpl.thumbnailUrl ? '' : escapeHTML(tpl.bannerText);
+        const adminFrameStyle = imageUrl 
+            ? `background: url('${imageUrl}') center/cover no-repeat; height: 60px; border-radius: 4px;` 
+            : `background: ${tpl.gradientStyle}; padding: 0.5rem; font-size: 0.7rem; font-weight: bold; text-align: center; border-radius: 4px; color: #fff; letter-spacing:1px;`; //[cite: 7]
 
-            return `
-                <div class="brief-card" style="border-top: 3px solid var(--border-active);">
-                    <div class="card-header" style="flex-direction:column; gap:0.5rem; align-items:stretch;">
-                        <div style="${adminFrameStyle}">
-                            ${adminBannerMarkup}
-                        </div>
-                        <div class="comp-info">
-                            <div class="comp-name" style="font-size:1.1rem;">${escapeHTML(tpl.title)}</div>
-                            <div class="comp-email">${escapeHTML(tpl.tag)}</div>
-                        </div>
-                        <span class="tag custom" style="width:fit-content; text-align:center;">${tpl.category}</span>
+        const adminBannerMarkup = imageUrl ? '' : escapeHTML(tpl.bannerText); //[cite: 7]
+
+        return `
+            <div class="brief-card" style="border-top: 3px solid var(--border-active);">
+                <div class="card-header" style="flex-direction:column; gap:0.5rem; align-items:stretch;">
+                    <div style="${adminFrameStyle}">
+                        ${adminBannerMarkup}
                     </div>
-                    <div class="brief-body" style="margin-top:0.5rem; font-size:0.8rem; padding:0.75rem;">${escapeHTML(tpl.description)}</div>
-                    <div class="action-row">
-                        <span class="timestamp">[ID: ${tpl._id.substring(18)}]</span>
-                        <button class="btn-purge" onclick="purgePublishedTemplate('${tpl._id}')">UNPUBLISH</button>
+                    <div class="comp-info">
+                        <div class="comp-name" style="font-size:1.1rem;">${escapeHTML(tpl.title)}</div>
+                        <div class="comp-email">${escapeHTML(tpl.tag)}</div>
                     </div>
+                    <span class="tag custom" style="width:fit-content; text-align:center;">${tpl.category}</span>
                 </div>
-            `;
-        }).join('');
-    }
+                <div class="brief-body" style="margin-top:0.5rem; font-size:0.8rem; padding:0.75rem;">${escapeHTML(tpl.description)}</div>
+                <div class="action-row">
+                    <span class="timestamp">[ID: ${tpl._id.substring(18)}]</span>
+                    <button class="btn-purge" onclick="purgePublishedTemplate('${tpl._id}')">UNPUBLISH</button>
+                </div>
+            </div>
+        `; //[cite: 7]
+    }).join(''); //[cite: 7]
+}
 
     // ==========================================================================
     // 🚀 5. PUBLISHING ACTION SYSTEM (CLOSES THE MODAL AUTOMATICALLY UPON SUCCESS)
