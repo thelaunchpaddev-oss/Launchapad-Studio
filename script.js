@@ -41,20 +41,24 @@ function renderFrameworkGrid(templates) {
     if (!matrixGrid) return; //
     
     matrixGrid.innerHTML = templates.map(tpl => {
-        const actionButton = tpl.livePreviewUrl //[cite: 9]
-            ? `<a href="${tpl.livePreviewUrl}" target="_blank" rel="noopener noreferrer" class="matrix-btn-blueprint">Explore Live Demo ↗</a>` //[cite: 9]
-            : `<span class="matrix-fallback-tag">Blueprint Deploying Soon</span>`; //[cite: 9]
+        const actionButton = tpl.livePreviewUrl 
+            ? `<a href="${tpl.livePreviewUrl}" target="_blank" rel="noopener noreferrer" class="matrix-btn-blueprint">Explore Live Demo ↗</a>`
+            : `<span class="matrix-fallback-tag">Blueprint Deploying Soon</span>`; 
 
-        // ⚡ OPTIMIZED: Synchronized color fallbacks from dashboard CMS tokens
+      
         const backgroundGradient = tpl.gradientStyle || 'linear-gradient(135deg, #00f0ff 0%, #1a2035 100%)';
 
-        const imageViewportHTML = tpl.thumbnailUrl //[cite: 9]
+        const imageUrl = tpl.thumbnailUrl 
+            ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
+            : null;
+
+        const imageViewportHTML = imageUrl 
             ? `<div class="image-viewport">
-                   <img src="${tpl.thumbnailUrl}" alt="${escapeText(tpl.title)}" loading="lazy">
-               </div>` //[cite: 9]
+                   <img src="${imageUrl}" alt="${escapeText(tpl.title)}" loading="lazy">
+               </div>` 
             : `<div class="image-viewport fallback-mesh" style="background: ${backgroundGradient} !important;">
                    <span class="mesh-banner-text">${escapeText(tpl.bannerText || '⚡ PRE-BUILT VAULT')}</span>
-               </div>`; //[cite: 9]
+               </div>`;
 
         return `
             <div class="matrix-item" data-category="${tpl.category}">
@@ -70,10 +74,10 @@ function renderFrameworkGrid(templates) {
                     ${actionButton}
                 </div>
             </div>
-        `; //[cite: 9]
-    }).join(''); //[cite: 9]
+        `; 
+    }).join(''); 
 
-    initializeFilterEngine(); //[cite: 9]
+    initializeFilterEngine(); 
 }
 
     // ==========================================================================
