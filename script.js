@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchLiveFrameworks() {
         if (!matrixGrid) return;
 
+        // ⚡ ADDED: Inject a premium loading animation immediately before the fetch request starts
+        matrixGrid.innerHTML = `
+            <div class="matrix-loader-wrapper" style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: #00f0ff;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">Synchronizing Live Design Vault...</p>
+            </div>
+        `;
+
         try {
             // Retrieve dynamic template blueprints from your API engine
             const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`);
@@ -49,8 +57,8 @@ function renderFrameworkGrid(templates) {
         const backgroundGradient = tpl.gradientStyle || 'linear-gradient(135deg, #00f0ff 0%, #1a2035 100%)';
 
         const imageUrl = tpl.thumbnailUrl 
-            ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
-            : null;
+        ? (tpl.thumbnailUrl.startsWith('http') || tpl.thumbnailUrl.startsWith('data:') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
+         : null;
 
         const imageViewportHTML = imageUrl 
             ? `<div class="image-viewport">
