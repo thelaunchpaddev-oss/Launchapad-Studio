@@ -271,10 +271,10 @@ function renderCatalogCards(templates) {
             formData.append('bannerText', document.getElementById('tplBanner').value.trim() || '⚡ PRE-BUILT VAULT');
             formData.append('description', document.getElementById('tplDescription').value.trim());
 
-            const fileInput = document.getElementById('tplThumbnailFile');
+            const fileInput = document.getElementById('thumbnailFile'); 
             if (fileInput && fileInput.files.length > 0) {
                 formData.append('thumbnailFile', fileInput.files[0]);
-            }
+}
 
             try {
                 // ⚡ CONFIG SYNCHRONIZATION UPGRADE
