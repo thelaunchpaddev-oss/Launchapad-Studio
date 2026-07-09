@@ -57,8 +57,8 @@ function renderFrameworkGrid(templates) {
         const backgroundGradient = tpl.gradientStyle || 'linear-gradient(135deg, #00f0ff 0%, #1a2035 100%)';
 
         const imageUrl = tpl.thumbnailUrl 
-        ? (tpl.thumbnailUrl.startsWith('http') || tpl.thumbnailUrl.startsWith('data:') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
-         : null;
+        ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
+        : null;
 
         const imageViewportHTML = imageUrl 
             ? `<div class="image-viewport">
