@@ -243,7 +243,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1.25rem;
+    gap: 12px; /* Adds safe breathing room */
 }
 
 .comp-info { flex-grow: 1; }
@@ -252,13 +252,16 @@ h1 {
 
 /* Strategy Tag Indicators */
 .tag {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    padding: 0.35rem 0.75rem;
+    padding: 0.3rem 0.6rem;
     border-radius: 4px;
     letter-spacing: 0.5px;
-    white-space: nowrap;
+    max-width: 50%;
+    text-align: right;
+    word-break: break-word;
 }
+
 .tag.custom { background: rgba(0, 240, 255, 0.12); color: var(--neon-blue); border: 1px solid rgba(0,240,255,0.2); }
 .tag.fullstack { background: rgba(0, 255, 102, 0.12); color: var(--neon-green); border: 1px solid rgba(0,255,102,0.2); }
 .tag.consult { background: rgba(255, 51, 102, 0.12); color: var(--neon-red); border: 1px solid rgba(255,51,102,0.2); }

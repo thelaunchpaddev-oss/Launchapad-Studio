@@ -186,7 +186,6 @@ function renderMatrixCards(briefs) {
         return;
     }
 
-    // ⚡ Friendly label lookup map
     const objectiveLabels = {
         'custom': '🚀 Pre-Built Vault Framework',
         'fullstack': '⚡ Custom Full-Stack App',
@@ -194,12 +193,11 @@ function renderMatrixCards(briefs) {
     };
 
     matrixGrid.innerHTML = briefs.map(brief => {
-        // Fall back to the raw value if it's an unrecognized string
         const displayGoal = objectiveLabels[brief.coreObjective] || brief.coreObjective;
 
         return `
             <div class="brief-card">
-                <div class="card-header">
+                <div class="card-header" style="flex-direction: column; gap: 0.5rem; align-items: flex-start;">
                     <div class="comp-info">
                         <div class="comp-name">${escapeHTML(brief.companyName)}</div>
                         <div class="comp-email">${escapeHTML(brief.corporateEmail)}</div>
