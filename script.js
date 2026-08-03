@@ -122,46 +122,45 @@ function initializeFilterEngine() {
     // ==========================================================================
     // 3. CLIENT BRIEF INTAKE FORM TRANSMITTER (POST PIPELINE)
     // ==========================================================================
-    if (agencyForm) {
-        agencyForm.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Blocks disruptive native window reload loops
+ if (agencyForm) {
+    agencyForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-            // Extract data profiles directly from layout nodes
-            const companyName = document.getElementById('bizName').value.trim();
-            const corporateEmail = document.getElementById('bizEmail').value.trim();
-            const coreObjective = document.getElementById('bizGoal').value;
-            const projectBrief = document.getElementById('bizBrief').value.trim();
+        const bizName = document.getElementById('bizName').value.trim();
+        const bizEmail = document.getElementById('bizEmail').value.trim();
+        const bizGoal = document.getElementById('bizGoal').value;
+        const bizBrief = document.getElementById('bizBrief').value.trim();
 
-            if (!companyName || !corporateEmail || !coreObjective) {
-                alert('Please populate all required form tracks.');
-                return;
+        if (!bizName || !bizEmail || !bizGoal) {
+            alert('Please populate all required form tracks.');
+            return;
+        }
+
+        // ⚡ FIX: Key names must match what server.js extracts (bizName, bizEmail, bizGoal, bizBrief)
+        const payload = { bizName, bizEmail, bizGoal, bizBrief };
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/api/commissions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert(`🚀 TRANSMISSION SUCCESSFUL\n\nYour layout specifications have been written directly to the database layer.\nReference ID: ${result.dataId}`);
+                agencyForm.reset();
+            } else {
+                alert(`❌ INGESTION REJECTED: ${result.message}`);
             }
 
-            // Formulate standard JSON payload mapped cleanly to your Mongoose Schema keys
-            const payload = { companyName, corporateEmail, coreObjective, projectBrief };
-
-            try {
-                const response = await fetch(`${CONFIG.API_BASE_URL}/api/commissions`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    alert(`🚀 TRANSMISSION SUCCESSFUL\n\nYour layout specifications have been written directly to the database layer.\nReference ID: ${result.dataId}`);
-                    agencyForm.reset(); // Safely clear form states upon validated database entry
-                } else {
-                    alert(`❌ INGESTION REJECTED: ${result.message}`);
-                }
-
-            } catch (error) {
-                console.error('Network Pipeline Fault:', error);
-                alert('❌ TRANSMISSION FAILED: Ensure your launchpad-core-api backend engine is active on port 5000.');
-            }
-        });
-    }
+        } catch (error) {
+            console.error('Network Pipeline Fault:', error);
+            alert('❌ TRANSMISSION FAILED: Ensure your launchpad-core-api backend engine is active on port 5000.');
+        }
+    });
+}
 
     // Text sanitization layer shielding output loops
     function escapeText(str) {
