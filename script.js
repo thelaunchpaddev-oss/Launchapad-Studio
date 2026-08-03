@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // 3. CLIENT BRIEF INTAKE FORM TRANSMITTER + CUSTOM NOTIFICATION TOAST
+    // 3. CLIENT BRIEF INTAKE FORM TRANSMITTER
     // ==========================================================================
     if (agencyForm) {
         agencyForm.addEventListener('submit', async (event) => {
@@ -125,7 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const bizBrief = document.getElementById('bizBrief').value.trim();
 
             if (!bizName || !bizEmail || !bizGoal) {
-                showToastNotification('⚠️ MISSING DETAILS', 'Please fill out all required fields before submitting.', 'error');
+                showModalNotification(
+                    'INCOMPLETE SUBMISSION', 
+                    'Please populate all required fields before submitting your project request.', 
+                    'error'
+                );
                 return;
             }
 
@@ -141,91 +145,120 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (result.success) {
-                    // 🚀 SHOW HIGH-TECH NOTIFICATION TOAST
-                    showToastNotification(
-                        '🚀 TRANSMISSION RECEIVED', 
-                        `Thank you, <strong>${escapeText(bizName)}</strong>! Your inquiry has been logged successfully. We will reach out to <strong>${escapeText(bizEmail)}</strong> shortly.`, 
+                    showModalNotification(
+                        'INQUIRY RECEIVED', 
+                        `Thank you, <strong>${escapeText(bizName)}</strong>. Your inquiry has been logged successfully.<br><br>Our team will review your specifications and contact you directly at <span style="color: #00f0ff;">${escapeText(bizEmail)}</span>.`, 
                         'success'
                     );
                     agencyForm.reset();
                 } else {
-                    showToastNotification('❌ INGESTION REJECTED', result.message, 'error');
+                    showModalNotification('SUBMISSION ERROR', result.message, 'error');
                 }
 
             } catch (error) {
                 console.error('Network Pipeline Fault:', error);
-                showToastNotification('❌ NETWORK FAULT', 'Unable to reach LaunchPad Core API. Please try again later.', 'error');
+                showModalNotification(
+                    'NETWORK FAULT', 
+                    'Unable to reach the server. Please check your internet connection and try again.', 
+                    'error'
+                );
             }
         });
     }
 
     // ==========================================================================
-    // 4. DYNAMIC NOTIFICATION TOAST GENERATOR
+    // 4. PROFESSIONAL CENTERED MODAL NOTIFICATION
     // ==========================================================================
-    function showToastNotification(title, message, type = 'success') {
-        let toastContainer = document.getElementById('toastContainer');
+    function showModalNotification(title, message, type = 'success') {
+        let modalOverlay = document.getElementById('noticeModalOverlay');
         
-        // Create container element if it doesn't exist yet
-        if (!toastContainer) {
-            toastContainer = document.createElement('div');
-            toastContainer.id = 'toastContainer';
-            toastContainer.style.cssText = `
+        // Build modal structure dynamically if it doesn't exist
+        if (!modalOverlay) {
+            modalOverlay = document.createElement('div');
+            modalOverlay.id = 'noticeModalOverlay';
+            modalOverlay.style.cssText = `
                 position: fixed;
-                bottom: 24px;
-                right: 24px;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(6, 7, 9, 0.85);
+                backdrop-filter: blur(8px);
                 z-index: 99999;
                 display: flex;
-                flex-direction: column;
-                gap: 12px;
-                max-width: 380px;
-                width: calc(100% - 48px);
-                pointer-events: none;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                box-sizing: border-box;
+                opacity: 0;
+                transition: opacity 0.25s ease;
             `;
-            document.body.appendChild(toastContainer);
+            document.body.appendChild(modalOverlay);
         }
 
         const isSuccess = type === 'success';
-        const accentColor = isSuccess ? '#00f0ff' : '#ff3366';
-        const bgGradient = isSuccess 
-            ? 'linear-gradient(135deg, rgba(13, 15, 22, 0.95) 0%, rgba(0, 240, 255, 0.08) 100%)'
-            : 'linear-gradient(135deg, rgba(13, 15, 22, 0.95) 0%, rgba(255, 51, 102, 0.08) 100%)';
+        const borderColor = isSuccess ? '#00f0ff' : '#ff3366';
 
-        const toast = document.createElement('div');
-        toast.style.cssText = `
-            background: ${bgGradient};
-            backdrop-filter: blur(12px);
-            border: 1px solid ${accentColor};
-            border-left: 4px solid ${accentColor};
-            border-radius: 6px;
-            padding: 16px;
-            color: #ffffff;
-            font-family: monospace;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            pointer-events: auto;
-            transform: translateX(120%);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        `;
+        modalOverlay.innerHTML = `
+            <div style="
+                background: #0d0f16;
+                border: 1px solid ${borderColor};
+                border-radius: 8px;
+                max-width: 440px;
+                width: 100%;
+                padding: 2rem;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+                font-family: inherit;
+                box-sizing: border-box;
+                text-align: center;
+                transform: scale(0.95);
+                transition: transform 0.25s ease;
+            ">
+                <div style="
+                    font-size: 0.75rem; 
+                    font-weight: 800; 
+                    letter-spacing: 2px; 
+                    color: ${borderColor}; 
+                    text-transform: uppercase;
+                    margin-bottom: 0.75rem;
+                ">// ${title}</div>
+                
+                <div style="
+                    font-size: 0.9rem; 
+                    line-height: 1.6; 
+                    color: #cbd5e1; 
+                    margin-bottom: 1.75rem;
+                ">${message}</div>
 
-        toast.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                <span style="font-size: 11px; font-weight: bold; letter-spacing: 1.5px; color: ${accentColor};">${title}</span>
-                <button style="background: transparent; border: none; color: #888; font-size: 14px; cursor: pointer; padding: 0; line-height: 1;" onclick="this.parentElement.parentElement.remove()">✕</button>
+                <button id="closeNoticeBtn" class="btn btn-stark-primary" style="
+                    width: 100%;
+                    padding: 0.75rem;
+                    cursor: pointer;
+                    font-family: inherit;
+                ">Acknowledge</button>
             </div>
-            <div style="font-size: 12px; line-height: 1.5; color: #d0d5dd;">${message}</div>
         `;
 
-        toastContainer.appendChild(toast);
-
-        // Slide into view smoothly
+        // Smooth fade and scale in
         requestAnimationFrame(() => {
-            toast.style.transform = 'translateX(0)';
+            modalOverlay.style.opacity = '1';
+            const card = modalOverlay.querySelector('div');
+            if (card) card.style.transform = 'scale(1)';
         });
 
-        // Auto-dismiss after 6 seconds
-        setTimeout(() => {
-            toast.style.transform = 'translateX(120%)';
-            setTimeout(() => toast.remove(), 400);
-        }, 6000);
+        // Close handlers
+        const closeBtn = document.getElementById('closeNoticeBtn');
+        const closeModal = () => {
+            modalOverlay.style.opacity = '0';
+            const card = modalOverlay.querySelector('div');
+            if (card) card.style.transform = 'scale(0.95)';
+            setTimeout(() => modalOverlay.remove(), 250);
+        };
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) closeModal();
+        });
     }
 
     // Text sanitization utility
