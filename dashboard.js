@@ -180,19 +180,31 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { console.error('Brief Retrieval Error:', err); }
     }
 
-    function renderMatrixCards(briefs) {
-        if (!briefs || briefs.length === 0) {
-            matrixGrid.innerHTML = `<div class="empty-state">No client specifications currently logged.</div>`;
-            return;
-        }
-        matrixGrid.innerHTML = briefs.map(brief => `
+function renderMatrixCards(briefs) {
+    if (!briefs || briefs.length === 0) {
+        matrixGrid.innerHTML = `<div class="empty-state">No client specifications currently logged.</div>`;
+        return;
+    }
+
+    // ⚡ Friendly label lookup map
+    const objectiveLabels = {
+        'custom': '🚀 Pre-Built Vault Framework',
+        'fullstack': '⚡ Custom Full-Stack App',
+        'consult': '📞 Strategy Call'
+    };
+
+    matrixGrid.innerHTML = briefs.map(brief => {
+        // Fall back to the raw value if it's an unrecognized string
+        const displayGoal = objectiveLabels[brief.coreObjective] || brief.coreObjective;
+
+        return `
             <div class="brief-card">
                 <div class="card-header">
                     <div class="comp-info">
                         <div class="comp-name">${escapeHTML(brief.companyName)}</div>
                         <div class="comp-email">${escapeHTML(brief.corporateEmail)}</div>
                     </div>
-                    <span class="tag ${brief.coreObjective}">${brief.coreObjective}</span>
+                    <span class="tag ${brief.coreObjective}">${escapeHTML(displayGoal)}</span>
                 </div>
                 <div class="brief-body">${escapeHTML(brief.projectBrief || 'No parameters outlined.')}</div>
                 <div class="action-row">
@@ -200,8 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="btn-purge" onclick="purgeClientBrief('${brief._id}')">PURGE DATA</button>
                 </div>
             </div>
-        `).join('');
-    }
+        `;
+    }).join('');
+}
 
     // ==========================================================================
     // 🎨 4. DATA DEPLOYMENT STREAM 2: THE CMS TEMPLATE STOREFRONT
