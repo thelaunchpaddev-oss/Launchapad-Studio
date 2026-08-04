@@ -1,9 +1,10 @@
+<!-- Replace your dashboard.html with this updated structure -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launchpad Core // Ops Command</title>
+    <title>LAUNCHER STUDIO // Ops Command</title>
     <link rel="icon" type="image/svg+xml" href="/Files/LaunchpadFAV.svg">
     <link rel="stylesheet" href="dashboard.css">
 </head>
@@ -12,7 +13,7 @@
 
     <div id="authGateOverlay" class="auth-gate-overlay">
         <div class="auth-gate-card">
-            <h2>🔒 LaunchPad HQ // Access Restricted</h2>
+            <h2>🔒 LAUNCHER HQ // ACCESS RESTRICTED</h2>
             <form id="authGateForm">
                 <input type="password" id="gatePasskeyInput" placeholder="ENTER SYSTEM MASTER KEY..." required>
                 <button type="submit" class="btn-auth-submit">Decrypt Console ↗</button>
@@ -29,11 +30,12 @@
             </div>
             
             <form id="templateForm" class="cms-form-container">
-                <input type="text" id="tplTitle" placeholder="Template Name (e.g., The Smart Form)" required>
-                <input type="text" id="tplTag" placeholder="Functional Subtitle (e.g., Lead Generation)" required>
+                <input type="text" id="tplTitle" placeholder="Framework Name (e.g., Dream Dough Bakery)" required>
+                <input type="text" id="tplTag" placeholder="Functional Subtitle (e.g., Custom Cakes & Confections)" required>
                 
                 <select id="tplCategory" required>
                     <option value="" disabled selected>Select Sorting Category...</option>
+                    <option value="bakery">Bakeries & Food Studios</option>
                     <option value="conversion">Booking & Leads</option>
                     <option value="visual">Visual & Creative</option>
                     <option value="invite">Event E-Invitations</option>
@@ -46,8 +48,8 @@
                     <option value="linear-gradient(135deg, #a855f7 0%, #0d0f16 100%)">Royal Violet Glow</option>
                 </select>
 
-                <input type="text" id="vaultTargetUrl" placeholder="Live Preview URL (e.g., https://bakery.vercel.app)" required>
-                <input type="text" id="tplBanner" placeholder="Banner Text (e.g., 📋 LEAD GEN)" value="⚡ PRE-BUILT VAULT">
+                <input type="text" id="vaultTargetUrl" placeholder="Live Preview URL (e.g., https://dreamdough.vercel.app)" required>
+                <input type="text" id="tplBanner" placeholder="Banner Text (e.g., 🍰 BAKERY FRAMEWORK)" value="⚡ READY FRAMEWORK">
                 <input type="file" id="thumbnailFile" name="thumbnailFile" accept="image/*">
                 <textarea id="tplDescription" rows="4" placeholder="Plain-text benefit description written for the customer..." required></textarea>
                 
@@ -58,26 +60,26 @@
 
     <div class="app-container">
     
-    <div class="mobile-header-bar">
-        <div class="brand-title-mobile">LAUNCHPAD<span>.CORE</span></div>
-        <button id="mobileMenuToggleBtn" class="btn-mobile-toggle">MENU ☰</button>
-    </div>
+        <div class="mobile-header-bar">
+            <div class="brand-title-mobile">LAUNCHER<span>//STUDIO</span></div>
+            <button id="mobileMenuToggleBtn" class="btn-mobile-toggle">MENU ☰</button>
+        </div>
 
-    <aside id="sidebarPanel">
-        <div class="sidebar-main">
-            <div class="brand-title-desktop">LAUNCHPAD<span>.CORE</span></div>
-            <ul class="nav-links" id="navLinksList">
-                <li class="nav-item active" id="tabBriefs">📡 Ingestion Matrix</li>
-                <li class="nav-item" id="tabTemplates">🎨 Template Manager</li>
-                <li class="nav-item" id="tabSecurity">🛡️ Security Manager</li>
-            </ul>
-        </div>
-        
-        <div class="sidebar-footer">
-            <div class="version-tag">v1.1.0-DYNAMIC_CMS</div>
-            <button id="logoutBtn" class="btn-exit">EXIT CONSOLE ↗</button>
-        </div>
-    </aside>
+        <aside id="sidebarPanel">
+            <div class="sidebar-main">
+                <div class="brand-title-desktop">LAUNCHER<span>//STUDIO</span></div>
+                <ul class="nav-links" id="navLinksList">
+                    <li class="nav-item active" id="tabBriefs">📡 Ingestion Matrix</li>
+                    <li class="nav-item" id="tabTemplates">🎨 Template Manager</li>
+                    <li class="nav-item" id="tabSecurity">🛡️ Security Manager</li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="version-tag">v2.0.0-LAUNCHER_CMS</div>
+                <button id="logoutBtn" class="btn-exit">EXIT CONSOLE ↗</button>
+            </div>
+        </aside>
 
         <main>
             <div id="viewBriefs">
@@ -108,7 +110,7 @@
             <div id="viewTemplates" style="display: none;">
                 <header>
                     <h1>FRAMEWORK ASSET MANAGER // CMS</h1>
-                    <button id="openTplModalBtn" class="btn-open-modal">[ + PUBLISH NEW BLU-PRINT ]</button>
+                    <button id="openTplModalBtn" class="btn-open-modal">[ + PUBLISH NEW BLUEPRINT ]</button>
                 </header>
 
                 <div class="catalog-display-vault full-width-vault">
@@ -149,6 +151,6 @@
     </div>
     
     <script src="config.js"></script>
-    <script src="dashboard.js?v=1.5"></script>
+    <script src="dashboard.js?v=2.0"></script>
 </body>
 </html>
