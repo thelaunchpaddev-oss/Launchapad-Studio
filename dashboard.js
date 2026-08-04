@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.onclick = function() {
-            localStorage.removeItem('launchpad_hq_session');
+            localStorage.removeItem('launcher_hq_session');
             window.location.reload();
         };
     }
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const passForm = document.getElementById('passwordUpdateForm');
     const passStatus = document.getElementById('passUpdateStatus');
     
-    const verifiedSessionToken = localStorage.getItem('launchpad_hq_session');
+    const verifiedSessionToken = localStorage.getItem('launcher_hq_session');
 
     // ==========================================================================
     // 🖥️ MOBILE DROP-DOWN TOGGLE MATRIX ENGINE
