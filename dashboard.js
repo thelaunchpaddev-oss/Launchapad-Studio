@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const responseResult = await response.json();
 
                     if (responseResult.success) {
-                        localStorage.setItem('launchpad_hq_session', responseResult.token);
+                        localStorage.setItem('launcher_hq_session', responseResult.token);
                         window.location.reload(); 
                     } else {
                         authError.textContent = `❌ ERROR: ${responseResult.message}`;
@@ -334,7 +334,7 @@ function renderCatalogCards(templates) {
                     passForm.reset();
 
                     setTimeout(() => {
-                        localStorage.removeItem('launchpad_hq_session');
+                        localStorage.removeItem('launcher_hq_session');
                         window.location.reload();
                     }, 2000);
                 } else {
