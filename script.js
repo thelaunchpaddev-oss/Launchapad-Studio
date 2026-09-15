@@ -7,12 +7,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const agencyForm = document.getElementById('agencyForm');
 
     // ==========================================================================
+    // 0. DIRECTIONAL SCROLL REVEAL OBSERVER ENGINE
+    // ==========================================================================
+    const animatedElements = document.querySelectorAll('.anim-slide-left, .anim-slide-right, .anim-fade-up');
+
+    const observerOptions = {
+        root: null,
+        threshold: 0.15 // Triggers smoothly when 15% of the element enters view
+    };
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+            } else {
+                // Remove class on exit so text and cards re-slide when scrolling back
+                entry.target.classList.remove('is-revealed');
+            }
+        });
+    }, observerOptions);
+
+    animatedElements.forEach(el => {
+        scrollObserver.observe(el);
+    });
+
+    // ==========================================================================
     // 1. DIGITAL CMS: FETCH AND RENDER DATABASE WORK FRAMEWORKS
     // ==========================================================================
     async function fetchLiveFrameworks() {
         if (!matrixGrid) return;
 
-        // Show loading spinner inside counter while fetching data
         if (templateCounter) {
             templateCounter.innerHTML = `<i class="fas fa-spinner fa-spin" style="font-size: 0.8em; opacity: 0.6;"></i>`;
         }
@@ -61,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
                 : null;
 
-            // Added loading="lazy", decoding="async", and fetchpriority="low" for lazy loading optimizations
             const imageViewportHTML = imageUrl 
                 ? `<div class="image-viewport">
                        <img src="${imageUrl}" alt="${escapeText(tpl.title)}" loading="lazy" decoding="async" fetchpriority="low">
@@ -270,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
     }
 
-    // Initialize content fetching loop
     fetchLiveFrameworks();
 });
 

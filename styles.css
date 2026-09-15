@@ -34,10 +34,10 @@
     padding: 0;
 }
 
-/* ⚡ SMOOTH CONTINUOUS SCROLL ENGINE */
+/* ⚡ CONTINUOUS PROXIMITY SCROLL SNAP ENGINE */
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y proximity; /* proximity allows natural continuous flow while still snapping cleanly */
+    scroll-snap-type: y proximity;
     -webkit-text-size-adjust: 100%;
 }
 
@@ -51,7 +51,7 @@ body {
 }
 
 /* ==========================================================================
-   2. REUSABLE INFRASTRUCTURE UTILITIES & DYNAMIC TRANSITIONS
+   2. REUSABLE INFRASTRUCTURE UTILITIES & DIRECTIONAL SCROLL ANIMATIONS
    ========================================================================== */
 .container {
     width: 100%;
@@ -118,56 +118,47 @@ body {
     padding-left: 8px;
 }
 
-/* ⚡ HIGH-END TRANSITION ANIMATIONS FOR INNER CONTENT */
-.reveal-section {
+/* ⚡ EDITORIAL DIRECTIONAL ANIMATION CLASSES */
+
+/* 1. SLIDE IN FROM LEFT TO RIGHT (Text Headers, Indicators) */
+.anim-slide-left {
     opacity: 0;
-    transform: translateY(40px) scale(0.98);
-    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), 
-                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateX(-60px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
     will-change: opacity, transform;
 }
 
-.reveal-section.active-visible {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-}
-
-/* Staggered item entry dynamic animations */
-.reveal-section .hero-text-block,
-.reveal-section .grid-left-sticky,
-.reveal-section .work-section-header,
-.reveal-section .portal-text-block,
-.reveal-section .pipeline-card {
+/* 2. SLIDE IN FROM RIGHT TO LEFT (Cards, Mockups, Panels) */
+.anim-slide-right {
     opacity: 0;
-    transform: translateY(25px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
-                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+    transform: translateX(60px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 
-.reveal-section .hero-stats-block,
-.reveal-section .grid-right-content,
-.reveal-section .work-matrix-grid,
-.reveal-section .portal-preview-card,
-.reveal-section .warranty-badge-container {
+/* 3. SOFT VERTICAL FADE UP (Subtext, CTAs, Grid Cards) */
+.anim-fade-up {
     opacity: 0;
-    transform: translateY(35px);
-    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
-                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 
-.reveal-section.active-visible .hero-text-block,
-.reveal-section.active-visible .grid-left-sticky,
-.reveal-section.active-visible .work-section-header,
-.reveal-section.active-visible .portal-text-block,
-.reveal-section.active-visible .pipeline-card,
-.reveal-section.active-visible .hero-stats-block,
-.reveal-section.active-visible .grid-right-content,
-.reveal-section.active-visible .work-matrix-grid,
-.reveal-section.active-visible .portal-preview-card,
-.reveal-section.active-visible .warranty-badge-container {
+/* Trigger classes added dynamically by JS IntersectionObserver */
+.anim-slide-left.is-revealed,
+.anim-slide-right.is-revealed,
+.anim-fade-up.is-revealed {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(0, 0);
 }
+
+/* Optional Stagger Delay Helpers */
+.delay-1 { transition-delay: 0.15s; }
+.delay-2 { transition-delay: 0.3s; }
+.delay-3 { transition-delay: 0.45s; }
 
 /* ==========================================================================
    3. STRUCTURAL FIXATION NAVIGATION LAYER
@@ -653,7 +644,7 @@ body {
 
 .portal-sample-ribbon {
     position: absolute;
-    top: 38px;
+    top: 18px;
     right: -32px;
     transform: rotate(45deg);
     background: var(--neon-cyan);
