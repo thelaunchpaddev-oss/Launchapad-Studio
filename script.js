@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchLiveFrameworks() {
         if (!matrixGrid) return;
 
+        // Show loading spinner inside counter while fetching data
+        if (templateCounter) {
+            templateCounter.innerHTML = `<i class="fas fa-spinner fa-spin" style="font-size: 0.8em; opacity: 0.6;"></i>`;
+        }
+
         matrixGrid.innerHTML = `
             <div class="matrix-loader-wrapper" style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: #00f0ff;">
                 <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
@@ -37,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('CMS Content Sync Fault:', error);
+            if (templateCounter) templateCounter.textContent = "00";
             matrixGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ff3366; padding:2rem; font-family:monospace;">⚠️ CONNECTION ERROR: Unable to load design matrix.</div>`;
         }
     }
@@ -55,9 +61,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
                 : null;
 
+            // Added loading="lazy", decoding="async", and fetchpriority="low" for lazy loading optimizations
             const imageViewportHTML = imageUrl 
                 ? `<div class="image-viewport">
-                       <img src="${imageUrl}" alt="${escapeText(tpl.title)}" loading="lazy">
+                       <img src="${imageUrl}" alt="${escapeText(tpl.title)}" loading="lazy" decoding="async" fetchpriority="low">
                    </div>` 
                 : `<div class="image-viewport fallback-mesh" style="background: ${backgroundGradient} !important;">
                        <span class="mesh-banner-text">${escapeText(tpl.bannerText || '⚡ PRE-BUILT VAULT')}</span>
@@ -172,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function showModalNotification(title, message, type = 'success') {
         let modalOverlay = document.getElementById('noticeModalOverlay');
         
-        // Build modal structure dynamically if it doesn't exist
         if (!modalOverlay) {
             modalOverlay = document.createElement('div');
             modalOverlay.id = 'noticeModalOverlay';
@@ -239,14 +245,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // Smooth fade and scale in
         requestAnimationFrame(() => {
             modalOverlay.style.opacity = '1';
             const card = modalOverlay.querySelector('div');
             if (card) card.style.transform = 'scale(1)';
         });
 
-        // Close handlers
         const closeBtn = document.getElementById('closeNoticeBtn');
         const closeModal = () => {
             modalOverlay.style.opacity = '0';
@@ -261,7 +265,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Text sanitization utility
     function escapeText(str) {
         if (!str) return '';
         return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));

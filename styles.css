@@ -34,8 +34,10 @@
     padding: 0;
 }
 
+/* ⚡ SMOOTH CONTINUOUS SCROLL ENGINE */
 html {
     scroll-behavior: smooth;
+    scroll-snap-type: y proximity; /* proximity allows natural continuous flow while still snapping cleanly */
     -webkit-text-size-adjust: 100%;
 }
 
@@ -49,7 +51,7 @@ body {
 }
 
 /* ==========================================================================
-   2. REUSABLE INFRASTRUCTURE UTILITIES
+   2. REUSABLE INFRASTRUCTURE UTILITIES & DYNAMIC TRANSITIONS
    ========================================================================== */
 .container {
     width: 100%;
@@ -116,6 +118,57 @@ body {
     padding-left: 8px;
 }
 
+/* ⚡ HIGH-END TRANSITION ANIMATIONS FOR INNER CONTENT */
+.reveal-section {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), 
+                transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+.reveal-section.active-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Staggered item entry dynamic animations */
+.reveal-section .hero-text-block,
+.reveal-section .grid-left-sticky,
+.reveal-section .work-section-header,
+.reveal-section .portal-text-block,
+.reveal-section .pipeline-card {
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s,
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.reveal-section .hero-stats-block,
+.reveal-section .grid-right-content,
+.reveal-section .work-matrix-grid,
+.reveal-section .portal-preview-card,
+.reveal-section .warranty-badge-container {
+    opacity: 0;
+    transform: translateY(35px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+}
+
+.reveal-section.active-visible .hero-text-block,
+.reveal-section.active-visible .grid-left-sticky,
+.reveal-section.active-visible .work-section-header,
+.reveal-section.active-visible .portal-text-block,
+.reveal-section.active-visible .pipeline-card,
+.reveal-section.active-visible .hero-stats-block,
+.reveal-section.active-visible .grid-right-content,
+.reveal-section.active-visible .work-matrix-grid,
+.reveal-section.active-visible .portal-preview-card,
+.reveal-section.active-visible .warranty-badge-container {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* ==========================================================================
    3. STRUCTURAL FIXATION NAVIGATION LAYER
    ========================================================================== */
@@ -133,7 +186,6 @@ body {
     transition: var(--matrix-transition);
 }
 
-/* ⚡ THE FIX: Aggressively eliminate the toggle bars from desktop viewport rendering entirely */
 .nav-toggle {
     display: none !important;
 }
@@ -194,10 +246,16 @@ body {
 }
 
 /* ==========================================================================
-   4. TECH-AGENCY EDITORIAL HERO
+   4. FULL-VIEWPORT SECTIONS (100vh Layouts)
    ========================================================================== */
+
+/* 1. HERO SECTION */
 .hero-section {
-    padding: 220px 0 140px 0;
+    min-height: 100vh;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    padding: 100px 0 60px 0;
     border-bottom: 1px solid var(--border-slate);
     background-image: linear-gradient(rgba(30, 41, 59, 0.3) 1px, transparent 1px), 
                       linear-gradient(90deg, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
@@ -210,6 +268,7 @@ body {
     grid-template-columns: 1.25fr 0.75fr;
     gap: 80px;
     align-items: center;
+    width: 100%;
 }
 
 .hero-ticker {
@@ -228,7 +287,7 @@ body {
 
 .hero-text-block h1 {
     font-family: var(--font-heading);
-    font-size: 68px;
+    font-size: 64px;
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: -0.03em;
@@ -237,7 +296,7 @@ body {
 }
 
 .hero-lead {
-    font-size: 19px;
+    font-size: 18px;
     line-height: 1.65;
     color: var(--text-muted);
     margin-bottom: 44px;
@@ -250,7 +309,6 @@ body {
     gap: 32px;
 }
 
-/* Metric Display Blocks */
 .hero-stats-block {
     display: flex;
     flex-direction: column;
@@ -287,11 +345,13 @@ body {
     letter-spacing: 0.08em;
 }
 
-/* ==========================================================================
-   5. MISSION & CORE OBJECTIVE SECTIONS
-   ========================================================================== */
+/* 2. MISSION SECTION */
 .mission-section {
-    padding: 140px 0;
+    min-height: 100vh;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    padding: 100px 0;
     background-color: #04060C;
     border-bottom: 1px solid var(--border-slate);
 }
@@ -300,12 +360,8 @@ body {
     display: grid;
     grid-template-columns: 0.8fr 1.2fr;
     gap: 80px;
-}
-
-.grid-left-sticky {
-    position: sticky;
-    top: 140px;
-    height: max-content;
+    align-items: center;
+    width: 100%;
 }
 
 .grid-left-sticky h2 {
@@ -318,7 +374,7 @@ body {
 }
 
 .philosophy-block {
-    margin-bottom: 54px;
+    margin-bottom: 36px;
 }
 .philosophy-block:last-child { margin-bottom: 0; }
 
@@ -327,33 +383,35 @@ body {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
     color: var(--neon-cyan);
 }
 
 .philosophy-block p {
-    font-size: 17px;
-    line-height: 1.75;
+    font-size: 16px;
+    line-height: 1.7;
     color: var(--text-muted);
 }
 
-/* ==========================================================================
-   6. INTERACTIVE REPOSITORY MATRIX FILTERS (Elite Web-Agency Spec)
-   ========================================================================== */
+/* 3. READY DESIGNS MATRIX SECTION */
 .work-section {
-    padding: 140px 0;
+    min-height: 100vh;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    padding: 100px 0 60px 0;
     border-bottom: 1px solid var(--border-slate);
 }
 
 .work-section-header {
-    margin-bottom: 54px;
+    margin-bottom: 32px;
 }
 
 .work-section-header h2 {
     font-family: var(--font-heading);
-    font-size: 44px;
+    font-size: 40px;
     font-weight: 800;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     letter-spacing: -0.02em;
 }
 
@@ -361,7 +419,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 54px;
+    margin-bottom: 32px;
     border-bottom: 1px solid var(--border-slate);
     padding-bottom: 16px;
 }
@@ -370,13 +428,13 @@ body {
     background: transparent;
     border: none;
     font-family: var(--font-heading);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-radius: 6px;
     transition: var(--matrix-transition);
 }
@@ -386,18 +444,15 @@ body {
     background-color: rgba(0, 240, 255, 0.05);
 }
 
-/* ⚡ FIXED: Mapping directly to your HTML's actual grid container class ⚡ */
 .work-matrix-grid {
     display: grid;
-    /* Forces desktop cards into a tight, professional 320px maximum width */
     grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
     justify-content: center;
-    gap: 24px;
+    gap: 20px;
     width: 100%;
     margin: 0 auto;
 }
 
-/* Shrunk, High-End Tech Dashboard Card Element */
 .matrix-item {
     background-color: var(--bg-panel);
     border: 1px solid var(--border-slate);
@@ -411,17 +466,15 @@ body {
     height: 100%;
 }
 
-/* 3D Hover Ignition State */
 .matrix-item:hover {
     transform: translateY(-8px);
     border-color: var(--neon-cyan);
     box-shadow: var(--cyan-glow), var(--panel-shadow);
 }
 
-/* Glassmorphic Monitor Viewport Layout Container */
 .image-viewport {
     width: 100%;
-    height: 160px; /* Kept compact to maintain proper square aspect ratio */
+    height: 140px;
     background: linear-gradient(135deg, #0A0F1D 0%, #1A233D 100%);
     border-bottom: 1px solid var(--border-slate);
     position: relative;
@@ -431,7 +484,6 @@ body {
     justify-content: center;
 }
 
-/* Automated Fallback Canvas Pattern when Image is missing or broken */
 .image-viewport.fallback-mesh,
 .image-viewport:not(:has(img)), 
 .image-viewport:has(img[src=""]), 
@@ -463,57 +515,52 @@ body {
     z-index: 2;
 }
 
-/* Inner Text Padding Reductions for Tighter Grid Balance */
 .item-data-pane {
-    padding: 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     flex-grow: 1;
 }
 
 .item-tag {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     color: var(--neon-cyan);
     letter-spacing: 0.08em;
-    margin-bottom: 4px;
 }
 
 .item-data-pane h3 {
     font-family: var(--font-heading);
-    font-size: 18px; 
+    font-size: 16px; 
     font-weight: 700;
     color: var(--text-primary);
-    letter-spacing: -0.01em;
     line-height: 1.2;
 }
 
 .item-data-pane p {
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
-/* Action Area Wrapper Spacing Reduction */
 .item-action-pane {
-    padding: 0 20px 20px 20px;
+    padding: 0 16px 16px 16px;
 }
 
-/* Seamless Card Action Trigger */
 .matrix-btn-blueprint {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     background-color: transparent;
     border: 1px solid var(--border-slate);
     color: var(--text-primary) !important;
     font-family: var(--font-heading);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
     text-decoration: none;
@@ -533,272 +580,21 @@ body {
     display: block;
     text-align: center;
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     color: var(--text-muted);
     font-style: italic;
-    padding: 12px;
+    padding: 10px;
     border: 1px dashed var(--border-slate);
     border-radius: 8px;
 }
 
-/* ==========================================================================
-   7. STARK TECHNICAL DATA INGESTION (Secure Command Form Panel)
-   ========================================================================== */
-.contact-section {
-    padding: 140px 0;
-    background-color: #04060C;
-    border-top: 1px solid var(--border-slate);
-}
-
-.contact-max-width {
-    max-width: 650px;
-    margin: 0 auto;
-}
-
-.agency-intake-form {
-    margin-top: 48px;
-    background-color: var(--bg-panel);
-    border: 1px solid var(--border-slate);
-    padding: 48px;
-    border-radius: 24px;
-    box-shadow: var(--panel-shadow);
-}
-
-.stark-input-row {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 24px;
-}
-
-@media (max-width: 580px) {
-    .stark-input-row { flex-direction: column; gap: 24px; }
-}
-
-.stark-input-group {
-    margin-bottom: 24px;
-    width: 100%;
-}
-
-.stark-input-group label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-    color: var(--text-muted);
-}
-
-.stark-input-row input, 
-.stark-input-group select, 
-.stark-input-group textarea {
-    width: 100%;
-    padding: 16px;
-    font-family: var(--font-sans);
-    font-size: 14.5px;
-    background-color: var(--bg-obsidian);
-    border: 1px solid var(--border-slate);
-    color: var(--text-primary);
-    border-radius: 10px;
-    transition: var(--matrix-transition);
-}
-
-.stark-input-row input:focus, 
-.stark-input-group select:focus, 
-.stark-input-group textarea:focus {
-    outline: none;
-    border-color: var(--neon-cyan);
-    box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
-}
-
-.stark-input-group select {
-    appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2364748B'><polygon points='0,0 10,0 5,5'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 18px center;
-}
-
-.btn-stark-submit {
-    width: 100%;
-    background-color: var(--neon-cyan);
-    color: var(--bg-obsidian);
-    padding: 18px;
-    font-family: var(--font-heading);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: var(--matrix-transition);
-}
-.btn-stark-submit:hover {
-    background-color: var(--text-primary);
-    color: var(--bg-obsidian);
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
-
-/* ==========================================================================
-   8. STUDIO FOOTER SYSTEM & BREAKPOINTS
-   ========================================================================== */
-.site-footer {
-    background-color: var(--bg-obsidian);
-    color: var(--text-muted);
-    padding: 48px 0;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-top: 1px solid var(--border-slate);
-}
-
-.footer-grid {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.attribution a {
-    color: var(--text-primary);
-    text-decoration: none;
-    transition: var(--matrix-transition);
-}
-.attribution a:hover {
-    color: var(--neon-cyan);
-}
-
-/* --- Responsive Engineering Optimization Breakpoints --- */
-@media (max-width: 992px) {
-    .hero-layout-grid, .mission-grid {
-        grid-template-columns: 1fr;
-        gap: 54px;
-    }
-    .grid-left-sticky { position: static; }
-    .hero-stats-block { flex-direction: row; flex-wrap: wrap; }
-    .stat-box { flex: 1 1 200px; }
-}
-
-/* ==========================================================================
-   📦 HIGH-FIDELITY MOBILE MOBILE RESPONSIVE ENGINE (Breakpoints)
-   ========================================================================== */
-@media (max-width: 768px) {
-    .hero-text-block h1 { font-size: 46px; }
-    .footer-grid { flex-direction: column; gap: 20px; text-align: center; }
-    .agency-intake-form { padding: 28px; border-radius: 16px; }
-
-    /* 1. FORCE THE NAVIGATION WRAPPER TO PRESERVE VISUAL LAYOUT */
-    .navbar {
-        height: 70px; /* Marginally tighter navbar for compact mobile viewport views */
-    }
-
-    /* 2. ENFORCE STRUCTURAL FLEX RE-ALIGNMENT FOR RESPONSIVE MENU NODES */
-    .nav-container {
-        position: relative;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* 3. SHOW THE HAMBURGER BUTTON WRAPPER AT MOBILE SCALE */
-    .nav-toggle {
-        display: flex !important;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 24px;
-        height: 16px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        z-index: 1100; /* Positions the switch cleanly above the sliding panel canvas */
-    }
-
-    /* Create the technical horizontal wire lines inside the toggle element */
-    .nav-toggle .bar {
-        width: 100%;
-        height: 2px;
-        background-color: var(--text-primary);
-        border-radius: 2px;
-        transition: var(--matrix-transition);
-        transform-origin: left center;
-    }
-
-    /* 4. TRANSFORM STICKY ROW LIST ITEMS INTO AN INTERACTIVE DROP-DOWN TERMINAL MODULE */
-    .nav-menu {
-        display: flex !important; /* Overrides the previous hiding rule */
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 32px;
-        
-        /* Fixed overlay orientation framing rules */
-        position: fixed;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        height: 0; /* Keeps the overlay completely shut by default */
-        background-color: rgba(15, 20, 36, 0.98); /* Blends securely with your deep panel slate hex style */
-        border-bottom: 1px solid var(--border-slate);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        padding: 0 24px;
-        overflow: hidden;
-        z-index: 1050;
-        
-        /* Smooth mechanical panel sliding effect framework */
-        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* 5. ACTIVE UTILITY STATES (Fires cleanly when javascript adds the .active selector) */
-    .nav-menu.active {
-        height: calc(100vh - 70px); /* Opens container viewport wide */
-        padding: 48px 24px; /* Soft structural padding deployment */
-    }
-
-    .nav-menu a {
-        font-size: 16px; /* Scaled up text targets to improve mobile touch targets */
-        width: 100%;
-        text-align: center;
-        padding: 12px 0;
-    }
-
-    .btn-nav-stark {
-        width: 80% !important;
-        max-width: 280px;
-        text-align: center;
-        justify-content: center;
-        margin-top: 16px;
-        border-color: var(--neon-cyan);
-        color: var(--neon-cyan);
-    }
-
-    /* 6. ANIMATED HAMBURGER-TO-CROSS SELECTION SHAPE TRANSFORMATIONS */
-    .nav-toggle.active .bar:nth-child(1) {
-        transform: rotate(45deg) translateY(-2px);
-    }
-
-    .nav-toggle.active .bar:nth-child(2) {
-        transform: rotate(-45deg) translateY(2px);
-    }
-
-     .work-matrix-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
-        justify-content: center !important;
-        gap: 20px !important;
-    }
-}
-
-
-/* ==========================================================================
-   ADDED STYLING: OWNER PORTAL & WORKFLOW PIPELINE
-   ========================================================================== */
-
-/* Owner Portal Feature Section */
+/* 4. OWNER PORTAL FEATURE SECTION */
 .portal-feature-section {
-    padding: 120px 0;
+    min-height: 100vh;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    padding: 100px 0;
     background-color: var(--bg-obsidian);
     border-bottom: 1px solid var(--border-slate);
 }
@@ -808,6 +604,7 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 60px;
     align-items: center;
+    width: 100%;
 }
 
 .portal-text-block h2 {
@@ -851,6 +648,25 @@ body {
     border-radius: 12px;
     box-shadow: var(--cyan-glow), var(--panel-shadow);
     overflow: hidden;
+    position: relative;
+}
+
+.portal-sample-ribbon {
+    position: absolute;
+    top: 38px;
+    right: -32px;
+    transform: rotate(45deg);
+    background: var(--neon-cyan);
+    color: var(--bg-obsidian);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 4px 34px;
+    box-shadow: 0 2px 10px rgba(0, 240, 255, 0.4);
+    z-index: 10;
+    text-transform: uppercase;
+    pointer-events: none;
 }
 
 .portal-card-header {
@@ -877,13 +693,14 @@ body {
     color: var(--text-muted);
     margin-left: auto;
     letter-spacing: 1px;
+    padding-right: 28px;
 }
 
 .portal-card-body {
-    padding: 28px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .mock-input-group label {
@@ -908,19 +725,19 @@ body {
 
 .mock-upload-zone {
     border: 1px dashed var(--border-slate);
-    padding: 20px;
+    padding: 16px;
     text-align: center;
     border-radius: 6px;
     color: var(--text-muted);
     font-size: 12px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     cursor: pointer;
 }
 
 .mock-upload-zone i {
-    font-size: 24px;
+    font-size: 20px;
     color: var(--neon-cyan);
 }
 
@@ -952,9 +769,13 @@ body {
     letter-spacing: 1px;
 }
 
-/* Process Section & Pipeline */
+/* 5. PROCESS PIPELINE SECTION */
 .process-section {
-    padding: 120px 0;
+    min-height: 100vh;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    padding: 100px 0;
     background-color: #04060C;
     border-bottom: 1px solid var(--border-slate);
 }
@@ -963,13 +784,13 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 24px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
 }
 
 .pipeline-card {
     background: var(--bg-panel);
     border: 1px solid var(--border-slate);
-    padding: 28px 24px;
+    padding: 24px 20px;
     border-radius: 12px;
     position: relative;
 }
@@ -981,13 +802,13 @@ body {
     color: var(--neon-cyan);
     opacity: 0.3;
     line-height: 1;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .pipeline-card h4 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .time-tag {
@@ -998,7 +819,7 @@ body {
     color: var(--neon-cyan);
     padding: 2px 8px;
     border-radius: 4px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     font-weight: 700;
 }
 
@@ -1008,7 +829,6 @@ body {
     line-height: 1.5;
 }
 
-/* Warranty Badge */
 .warranty-badge-container {
     max-width: 700px;
     margin: 0 auto;
@@ -1017,7 +837,7 @@ body {
 .warranty-badge {
     background: linear-gradient(135deg, rgba(0, 240, 255, 0.05) 0%, rgba(15, 20, 36, 0.8) 100%);
     border: 1px solid rgba(0, 240, 255, 0.3);
-    padding: 24px;
+    padding: 20px 24px;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -1025,22 +845,272 @@ body {
 }
 
 .warranty-icon {
-    font-size: 36px;
+    font-size: 32px;
     color: var(--neon-cyan);
 }
 
 .warranty-text h4 {
-    font-size: 16px;
-    margin-bottom: 4px;
+    font-size: 15px;
+    margin-bottom: 2px;
     color: var(--text-primary);
 }
 
 .warranty-text p {
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--text-muted);
 }
 
+/* 6. CONTACT SECTION */
+.contact-section {
+    min-height: 100vh;
+    scroll-snap-align: center;
+    display: flex;
+    align-items: center;
+    padding: 100px 0 60px 0;
+    background-color: #04060C;
+    border-top: 1px solid var(--border-slate);
+}
+
+.contact-max-width {
+    max-width: 650px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.agency-intake-form {
+    margin-top: 32px;
+    background-color: var(--bg-panel);
+    border: 1px solid var(--border-slate);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--panel-shadow);
+}
+
+.stark-input-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 580px) {
+    .stark-input-row { flex-direction: column; gap: 20px; }
+}
+
+.stark-input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.stark-input-group label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+}
+
+.stark-input-row input, 
+.stark-input-group select, 
+.stark-input-group textarea {
+    width: 100%;
+    padding: 14px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    background-color: var(--bg-obsidian);
+    border: 1px solid var(--border-slate);
+    color: var(--text-primary);
+    border-radius: 10px;
+    transition: var(--matrix-transition);
+}
+
+.stark-input-row input:focus, 
+.stark-input-group select:focus, 
+.stark-input-group textarea:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+}
+
+.stark-input-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2364748B'><polygon points='0,0 10,0 5,5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+}
+
+.btn-stark-submit {
+    width: 100%;
+    background-color: var(--neon-cyan);
+    color: var(--bg-obsidian);
+    padding: 16px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--matrix-transition);
+}
+.btn-stark-submit:hover {
+    background-color: var(--text-primary);
+    color: var(--bg-obsidian);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   5. STUDIO FOOTER SYSTEM & MOBILE OVERRIDES
+   ========================================================================== */
+.site-footer {
+    scroll-snap-align: end;
+    background-color: var(--bg-obsidian);
+    color: var(--text-muted);
+    padding: 32px 0;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-top: 1px solid var(--border-slate);
+}
+
+.footer-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attribution a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: var(--matrix-transition);
+}
+.attribution a:hover {
+    color: var(--neon-cyan);
+}
+
+@media (max-width: 992px) {
+    .hero-layout-grid, .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .hero-stats-block { flex-direction: row; flex-wrap: wrap; }
+    .stat-box { flex: 1 1 200px; }
+}
+
 @media (max-width: 768px) {
+    html {
+        scroll-snap-type: none;
+    }
+
+    .hero-section, 
+    .mission-section, 
+    .work-section, 
+    .portal-feature-section, 
+    .process-section, 
+    .contact-section {
+        min-height: auto;
+        padding: 90px 0 60px 0;
+    }
+
+    .hero-text-block h1 { font-size: 42px; }
+    .footer-grid { flex-direction: column; gap: 20px; text-align: center; }
+    .agency-intake-form { padding: 24px; border-radius: 16px; }
+
+    .navbar {
+        height: 70px;
+    }
+
+    .nav-container {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-toggle {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 24px;
+        height: 16px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1100;
+    }
+
+    .nav-toggle .bar {
+        width: 100%;
+        height: 2px;
+        background-color: var(--text-primary);
+        border-radius: 2px;
+        transition: var(--matrix-transition);
+        transform-origin: left center;
+    }
+
+    .nav-menu {
+        display: flex !important;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 32px;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: 0;
+        background-color: rgba(15, 20, 36, 0.98);
+        border-bottom: 1px solid var(--border-slate);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 0 24px;
+        overflow: hidden;
+        z-index: 1050;
+        transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .nav-menu.active {
+        height: calc(100vh - 70px);
+        padding: 48px 24px;
+    }
+
+    .nav-menu a {
+        font-size: 16px;
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+    }
+
+    .btn-nav-stark {
+        width: 80% !important;
+        max-width: 280px;
+        text-align: center;
+        justify-content: center;
+        margin-top: 16px;
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+    }
+
+    .nav-toggle.active .bar:nth-child(1) {
+        transform: rotate(45deg) translateY(-2px);
+    }
+
+    .nav-toggle.active .bar:nth-child(2) {
+        transform: rotate(-45deg) translateY(2px);
+    }
+
+    .work-matrix-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+        justify-content: center !important;
+        gap: 20px !important;
+    }
+
     .portal-grid { grid-template-columns: 1fr; gap: 40px; }
     .warranty-badge { flex-direction: column; text-align: center; }
 }
