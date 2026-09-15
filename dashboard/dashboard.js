@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- SIDEBAR NAVIGATION TABS ---
     const tabBriefs = document.getElementById('tabBriefs');
     const tabTemplates = document.getElementById('tabTemplates');
-    const tabSecurity = document.getElementById('tabSecurity'); // ⚡ Linked to HTML ID
+    const tabSecurity = document.getElementById('tabSecurity');
 
     // --- PANEL WRAPPER PANES ---
     const viewBriefs = document.getElementById('viewBriefs');
     const viewTemplates = document.getElementById('viewTemplates');
-    const viewSecurity = document.getElementById('viewSecurity'); // ⚡ Linked to HTML ID
+    const viewSecurity = document.getElementById('viewSecurity');
 
     // --- LAYOUT PANEL CONTAINERS ---
     const matrixGrid = document.getElementById('matrixGrid');
@@ -47,7 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const passForm = document.getElementById('passwordUpdateForm');
     const passStatus = document.getElementById('passUpdateStatus');
     
-    const verifiedSessionToken = localStorage.getItem('launcher_hq_session');
+    // Helper function to pull the live session token
+    const getSessionToken = () => localStorage.getItem('launcher_hq_session');
 
     // ==========================================================================
     // 🖥️ MOBILE DROP-DOWN TOGGLE MATRIX ENGINE
@@ -62,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================================
     // 🔐 SECURITY SESSION ENFORCEMENT ENGINE
     // ==========================================================================
-    if (verifiedSessionToken) {
+    if (getSessionToken()) {
         if (authOverlay) authOverlay.remove();
     } else {
         if (authForm) {
@@ -71,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 authError.style.display = 'none';
 
                 try {
-                    // ⚡ CONFIG SYNCHRONIZATION UPGRADE
                     const response = await fetch(`${CONFIG.API_BASE_URL}/api/auth/login`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -100,11 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 🧭 1. DASHBOARD VIEW NAVIGATION SWITCH ENGINE
     // ==========================================================================
     function clearActiveViewState() {
-        // Clear side item tracking active selection state indicators
         [tabBriefs, tabTemplates, tabSecurity].forEach(tab => tab?.classList.remove('active'));
-        // Suppress viewport panel boxes from visibility map
         [viewBriefs, viewTemplates, viewSecurity].forEach(view => { if (view) view.style.display = 'none'; });
-        // Auto-contract vertical navigation list when selection is registered on phone viewports
         if (sidebarPanel) {
             sidebarPanel.classList.remove('mobile-expanded');
             if (mobileMenuBtn) mobileMenuBtn.textContent = 'MENU ☰';
@@ -142,17 +139,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================================
     if (openTplModalBtn && tplModalOverlay) {
         openTplModalBtn.addEventListener('click', () => {
-            tplModalOverlay.style.display = 'flex'; // Reveals full screen backdrop layer
+            tplModalOverlay.style.display = 'flex';
         });
     }
 
     if (closeTplModalBtn && tplModalOverlay) {
         closeTplModalBtn.addEventListener('click', () => {
-            tplModalOverlay.style.display = 'none'; // Safely terminates form viewport presence
+            tplModalOverlay.style.display = 'none';
         });
     }
 
-    // Close the pop-up immediately if the user clicks onto the outer dimmed workspace area
     if (tplModalOverlay) {
         tplModalOverlay.addEventListener('click', (e) => {
             if (e.target === tplModalOverlay) {
@@ -167,7 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchOperationsMatrix() {
         if (!matrixGrid) return;
         try {
-            // ⚡ CONFIG SYNCHRONIZATION UPGRADE
             const response = await fetch(`${CONFIG.API_BASE_URL}/api/commissions`);
             const result = await response.json();
             if (!result.success) return;
@@ -180,39 +175,39 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) { console.error('Brief Retrieval Error:', err); }
     }
 
-function renderMatrixCards(briefs) {
-    if (!briefs || briefs.length === 0) {
-        matrixGrid.innerHTML = `<div class="empty-state">No client specifications currently logged.</div>`;
-        return;
-    }
+    function renderMatrixCards(briefs) {
+        if (!briefs || briefs.length === 0) {
+            matrixGrid.innerHTML = `<div class="empty-state">No client specifications currently logged.</div>`;
+            return;
+        }
 
-    const objectiveLabels = {
-        'custom': '🚀 Pre-Built Vault Framework',
-        'fullstack': '⚡ Custom Full-Stack App',
-        'consult': '📞 Strategy Call'
-    };
+        const objectiveLabels = {
+            'custom': '🚀 Pre-Built Vault Framework',
+            'fullstack': '⚡ Custom Full-Stack App',
+            'consult': '📞 Strategy Call'
+        };
 
-    matrixGrid.innerHTML = briefs.map(brief => {
-        const displayGoal = objectiveLabels[brief.coreObjective] || brief.coreObjective;
+        matrixGrid.innerHTML = briefs.map(brief => {
+            const displayGoal = objectiveLabels[brief.coreObjective] || brief.coreObjective;
 
-        return `
-            <div class="brief-card">
-                <div class="card-header" style="flex-direction: column; gap: 0.5rem; align-items: flex-start;">
-                    <div class="comp-info">
-                        <div class="comp-name">${escapeHTML(brief.companyName)}</div>
-                        <div class="comp-email">${escapeHTML(brief.corporateEmail)}</div>
+            return `
+                <div class="brief-card">
+                    <div class="card-header" style="flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                        <div class="comp-info">
+                            <div class="comp-name">${escapeHTML(brief.companyName)}</div>
+                            <div class="comp-email">${escapeHTML(brief.corporateEmail)}</div>
+                        </div>
+                        <span class="tag ${brief.coreObjective}">${escapeHTML(displayGoal)}</span>
                     </div>
-                    <span class="tag ${brief.coreObjective}">${escapeHTML(displayGoal)}</span>
+                    <div class="brief-body">${escapeHTML(brief.projectBrief || 'No parameters outlined.')}</div>
+                    <div class="action-row">
+                        <span class="timestamp">[LOGGED: ${new Date(brief.createdAt).toLocaleDateString()}]</span>
+                        <button class="btn-purge" onclick="purgeClientBrief('${brief._id}')">PURGE DATA</button>
+                    </div>
                 </div>
-                <div class="brief-body">${escapeHTML(brief.projectBrief || 'No parameters outlined.')}</div>
-                <div class="action-row">
-                    <span class="timestamp">[LOGGED: ${new Date(brief.createdAt).toLocaleDateString()}]</span>
-                    <button class="btn-purge" onclick="purgeClientBrief('${brief._id}')">PURGE DATA</button>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
+            `;
+        }).join('');
+    }
 
     // ==========================================================================
     // 🎨 4. DATA DEPLOYMENT STREAM 2: THE CMS TEMPLATE STOREFRONT
@@ -220,7 +215,6 @@ function renderMatrixCards(briefs) {
     async function fetchCMSCatalog() {
         if (!templateCatalogGrid) return;
         try {
-            // ⚡ CONFIG SYNCHRONIZATION UPGRADE
             const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`);
             const result = await response.json();
             if (!result.success) return;
@@ -230,44 +224,43 @@ function renderMatrixCards(briefs) {
         } catch (err) { console.error('CMS Catalog Retrieval Error:', err); }
     }
 
-function renderCatalogCards(templates) {
-    if (!templateCatalogGrid) return; //[cite: 7]
-    templateCatalogGrid.innerHTML = templates.map(tpl => {
-        // ⚡ THE FIX: Ensures any partial structural file paths get prefixed properly in your admin view
-        const imageUrl = tpl.thumbnailUrl 
-            ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
-            : null;
+    function renderCatalogCards(templates) {
+        if (!templateCatalogGrid) return;
+        templateCatalogGrid.innerHTML = templates.map(tpl => {
+            const imageUrl = tpl.thumbnailUrl 
+                ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
+                : null;
 
-        const adminFrameStyle = imageUrl 
-            ? `background: url('${imageUrl}') center/cover no-repeat; height: 60px; border-radius: 4px;` 
-            : `background: ${tpl.gradientStyle}; padding: 0.5rem; font-size: 0.7rem; font-weight: bold; text-align: center; border-radius: 4px; color: #fff; letter-spacing:1px;`; //[cite: 7]
+            const adminFrameStyle = imageUrl 
+                ? `background: url('${imageUrl}') center/cover no-repeat; height: 60px; border-radius: 4px;` 
+                : `background: ${tpl.gradientStyle}; padding: 0.5rem; font-size: 0.7rem; font-weight: bold; text-align: center; border-radius: 4px; color: #fff; letter-spacing:1px;`;
 
-        const adminBannerMarkup = imageUrl ? '' : escapeHTML(tpl.bannerText); //[cite: 7]
+            const adminBannerMarkup = imageUrl ? '' : escapeHTML(tpl.bannerText);
 
-        return `
-            <div class="brief-card" style="border-top: 3px solid var(--border-active);">
-                <div class="card-header" style="flex-direction:column; gap:0.5rem; align-items:stretch;">
-                    <div style="${adminFrameStyle}">
-                        ${adminBannerMarkup}
+            return `
+                <div class="brief-card" style="border-top: 3px solid var(--border-active);">
+                    <div class="card-header" style="flex-direction:column; gap:0.5rem; align-items:stretch;">
+                        <div style="${adminFrameStyle}">
+                            ${adminBannerMarkup}
+                        </div>
+                        <div class="comp-info">
+                            <div class="comp-name" style="font-size:1.1rem;">${escapeHTML(tpl.title)}</div>
+                            <div class="comp-email">${escapeHTML(tpl.tag)}</div>
+                        </div>
+                        <span class="tag custom" style="width:fit-content; text-align:center;">${tpl.category}</span>
                     </div>
-                    <div class="comp-info">
-                        <div class="comp-name" style="font-size:1.1rem;">${escapeHTML(tpl.title)}</div>
-                        <div class="comp-email">${escapeHTML(tpl.tag)}</div>
+                    <div class="brief-body" style="margin-top:0.5rem; font-size:0.8rem; padding:0.75rem;">${escapeHTML(tpl.description)}</div>
+                    <div class="action-row">
+                        <span class="timestamp">[ID: ${tpl._id.substring(18)}]</span>
+                        <button class="btn-purge" onclick="purgePublishedTemplate('${tpl._id}')">UNPUBLISH</button>
                     </div>
-                    <span class="tag custom" style="width:fit-content; text-align:center;">${tpl.category}</span>
                 </div>
-                <div class="brief-body" style="margin-top:0.5rem; font-size:0.8rem; padding:0.75rem;">${escapeHTML(tpl.description)}</div>
-                <div class="action-row">
-                    <span class="timestamp">[ID: ${tpl._id.substring(18)}]</span>
-                    <button class="btn-purge" onclick="purgePublishedTemplate('${tpl._id}')">UNPUBLISH</button>
-                </div>
-            </div>
-        `; //[cite: 7]
-    }).join(''); //[cite: 7]
-}
+            `;
+        }).join('');
+    }
 
     // ==========================================================================
-    // 🚀 5. PUBLISHING ACTION SYSTEM (CLOSES THE MODAL AUTOMATICALLY UPON SUCCESS)
+    // 🚀 5. PUBLISHING ACTION SYSTEM (WITH AUTH HEADER FIX)
     // ==========================================================================
     if (templateForm) {
         templateForm.addEventListener('submit', async (e) => {
@@ -285,19 +278,22 @@ function renderCatalogCards(templates) {
             const fileInput = document.getElementById('thumbnailFile'); 
             if (fileInput && fileInput.files.length > 0) {
                 formData.append('thumbnailFile', fileInput.files[0]);
-}
+            }
 
             try {
-                // ⚡ CONFIG SYNCHRONIZATION UPGRADE
+                // ⚡ AUTHORIZATION HEADER INJECTED FOR PROTECTED ROUTE
                 const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`, {
                     method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${getSessionToken()}`
+                    },
                     body: formData 
                 });
                 const result = await response.json();
 
                 if (result.success) {
                     templateForm.reset(); 
-                    if (tplModalOverlay) tplModalOverlay.style.display = 'none'; // Closes modal pop-up
+                    if (tplModalOverlay) tplModalOverlay.style.display = 'none';
                     await fetchCMSCatalog(); 
                 } else {
                     alert(`❌ INGESTION REJECTED: ${result.message}`);
@@ -307,7 +303,7 @@ function renderCatalogCards(templates) {
     }
 
     // ==========================================================================
-    // 🛡️ 6. SECURITY ROTATION MATRIX SYSTEM (PUT METHOD PIPELINE)
+    // 🛡️ 6. SECURITY ROTATION MATRIX SYSTEM
     // ==========================================================================
     if (passForm) {
         passForm.addEventListener('submit', async (e) => {
@@ -318,10 +314,12 @@ function renderCatalogCards(templates) {
             const newPassword = document.getElementById('newPass').value;
 
             try {
-                // ⚡ CONFIG SYNCHRONIZATION UPGRADE
                 const response = await fetch(`${CONFIG.API_BASE_URL}/api/auth/update-password`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getSessionToken()}`
+                    },
                     body: JSON.stringify({ currentPassword, newPassword })
                 });
 
@@ -351,19 +349,23 @@ function renderCatalogCards(templates) {
     }
 
     // ==========================================================================
-    // 🧼 7. SYSTEM DELETION PURGE UTILITIES
+    // 🧼 7. SYSTEM DELETION PURGE UTILITIES (WITH AUTH HEADER FIX)
     // ==========================================================================
     window.purgeClientBrief = async function(id) {
         if (!confirm('🛑 Permanent deletion entry tracking data profile. Continue?')) return;
-        // ⚡ CONFIG SYNCHRONIZATION UPGRADE
-        await fetch(`${CONFIG.API_BASE_URL}/api/commissions/${id}`, { method: 'DELETE' });
+        await fetch(`${CONFIG.API_BASE_URL}/api/commissions/${id}`, { 
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${getSessionToken()}` }
+        });
         fetchOperationsMatrix();
     };
 
     window.purgePublishedTemplate = async function(id) {
         if (!confirm('🛑 Unpublish and delete this template design?')) return;
-        // ⚡ CONFIG SYNCHRONIZATION UPGRADE
-        await fetch(`${CONFIG.API_BASE_URL}/api/templates/${id}`, { method: 'DELETE' });
+        await fetch(`${CONFIG.API_BASE_URL}/api/templates/${id}`, { 
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${getSessionToken()}` }
+        });
         fetchCMSCatalog();
     };
 
