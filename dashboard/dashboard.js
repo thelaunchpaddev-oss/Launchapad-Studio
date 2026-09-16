@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const authInput = document.getElementById('gatePasskeyInput');
     const authError = document.getElementById('authGateError');
 
-    // ⚡ FIXED LOGOUT HANDLER: Bound directly to .onclick for immediate execution capture
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.onclick = function() {
@@ -13,46 +12,35 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // --- SIDEBAR NAVIGATION TABS ---
     const tabBriefs = document.getElementById('tabBriefs');
     const tabTemplates = document.getElementById('tabTemplates');
     const tabSecurity = document.getElementById('tabSecurity');
 
-    // --- PANEL WRAPPER PANES ---
     const viewBriefs = document.getElementById('viewBriefs');
     const viewTemplates = document.getElementById('viewTemplates');
     const viewSecurity = document.getElementById('viewSecurity');
 
-    // --- LAYOUT PANEL CONTAINERS ---
     const matrixGrid = document.getElementById('matrixGrid');
     const templateCatalogGrid = document.getElementById('templateCatalogGrid');
 
-    // --- COUNTER BANNER NODES ---
     const kpiTotal = document.getElementById('kpiTotal');
     const kpiFullstack = document.getElementById('kpiFullstack');
     const kpiConsult = document.getElementById('kpiConsult');
     const cmsCount = document.getElementById('cmsCount');
 
-    // --- THE INTERACTIVE LAYOUT MODAL SELECTORS ---
     const tplModalOverlay = document.getElementById('tplModalOverlay');
     const openTplModalBtn = document.getElementById('openTplModalBtn');
     const closeTplModalBtn = document.getElementById('closeTplModalBtn');
     const templateForm = document.getElementById('templateForm');
 
-    // --- MOBILE COCKPIT LAYOUT MENU ELEMENTS ---
     const mobileMenuBtn = document.getElementById('mobileMenuToggleBtn');
     const sidebarPanel = document.getElementById('sidebarPanel');
 
-    // --- PASSWORD MANIPULATION TARGET KEYS ---
     const passForm = document.getElementById('passwordUpdateForm');
     const passStatus = document.getElementById('passUpdateStatus');
     
-    // Helper function to pull the live session token
     const getSessionToken = () => localStorage.getItem('launcher_hq_session');
 
-    // ==========================================================================
-    // 🖥️ MOBILE DROP-DOWN TOGGLE MATRIX ENGINE
-    // ==========================================================================
     if (mobileMenuBtn && sidebarPanel) {
         mobileMenuBtn.addEventListener('click', () => {
             sidebarPanel.classList.toggle('mobile-expanded');
@@ -60,9 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================================================
-    // 🔐 SECURITY SESSION ENFORCEMENT ENGINE
-    // ==========================================================================
     if (getSessionToken()) {
         if (authOverlay) authOverlay.remove();
     } else {
@@ -96,9 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ==========================================================================
-    // 🧭 1. DASHBOARD VIEW NAVIGATION SWITCH ENGINE
-    // ==========================================================================
     function clearActiveViewState() {
         [tabBriefs, tabTemplates, tabSecurity].forEach(tab => tab?.classList.remove('active'));
         [viewBriefs, viewTemplates, viewSecurity].forEach(view => { if (view) view.style.display = 'none'; });
@@ -134,9 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================================================
-    // 🎛️ 2. POP-UP MODAL ENGINE OPERATIONAL LAYOUT LIFECYCLE
-    // ==========================================================================
     if (openTplModalBtn && tplModalOverlay) {
         openTplModalBtn.addEventListener('click', () => {
             tplModalOverlay.style.display = 'flex';
@@ -157,9 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================================================
-    // 📡 3. DATA DEPLOYMENT STREAM 1: CLIENT INQUIRIES/BRIEFS
-    // ==========================================================================
     async function fetchOperationsMatrix() {
         if (!matrixGrid) return;
         try {
@@ -209,9 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    // ==========================================================================
-    // 🎨 4. DATA DEPLOYMENT STREAM 2: THE CMS TEMPLATE STOREFRONT
-    // ==========================================================================
     async function fetchCMSCatalog() {
         if (!templateCatalogGrid) return;
         try {
@@ -259,9 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
-    // ==========================================================================
-    // 🚀 5. PUBLISHING ACTION SYSTEM (WITH AUTH HEADER FIX)
-    // ==========================================================================
     if (templateForm) {
         templateForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -281,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // ⚡ AUTHORIZATION HEADER INJECTED FOR PROTECTED ROUTE
                 const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`, {
                     method: 'POST',
                     headers: {
@@ -302,9 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================================================
-    // 🛡️ 6. SECURITY ROTATION MATRIX SYSTEM
-    // ==========================================================================
+
     if (passForm) {
         passForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -348,9 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==========================================================================
-    // 🧼 7. SYSTEM DELETION PURGE UTILITIES (WITH AUTH HEADER FIX)
-    // ==========================================================================
     window.purgeClientBrief = async function(id) {
         if (!confirm('🛑 Permanent deletion entry tracking data profile. Continue?')) return;
         await fetch(`${CONFIG.API_BASE_URL}/api/commissions/${id}`, { 
@@ -373,7 +337,5 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!str) return '';
         return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
     }
-
-    // Initial operational payload run
     fetchOperationsMatrix();
 });
