@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAUNCHER HQ // Event Console</title>
+    <link rel="icon" type="image/svg+xml" href="/Files/LaunchpadFAV.svg">
+    <link rel="stylesheet" href="event-hq-client.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="clientAuthOverlay" class="auth-overlay">
+        <div class="auth-card">
+            <h2>💒 COUPLE PORTAL ACCESS</h2>
+            <form id="clientLoginForm">
+                <input type="email" id="loginEmail" placeholder="ENTER REGISTERED EMAIL..." required>
+                <input type="password" id="loginPass" placeholder="ENTER ACCESS PASSCODE..." required>
+                <button type="submit" class="btn-primary">Authenticate Console ↗</button>
+            </form>
+            <p id="loginError" class="error-log"></p>
+        </div>
+    </div>
+
+    <div class="app-shell">
+        <header class="top-nav">
+            <div class="brand">EVENT HQ // <span id="displayCoupleNames">COUPLE CONSOLE</span></div>
+            <button id="logoutBtn" class="btn-exit"><i class="fas fa-power-off"></i> Exit Console</button>
+        </header>
+
+        <main class="content-container">
+            <section class="kpi-ribbon">
+                <div class="kpi-box blue">
+                    <span class="label">Total Ingested Guests</span>
+                    <div id="statTotalLogged" class="val">0</div>
+                </div>
+                <div class="kpi-box green">
+                    <span class="label">Confirmed Attending (YES)</span>
+                    <div id="statAttending" class="val">0</div>
+                </div>
+                <div class="kpi-box red">
+                    <span class="label">Declined Invites (NO)</span>
+                    <div id="statDeclined" class="val">0</div>
+                </div>
+                <div class="kpi-box gold">
+                    <span class="label">Total Headcount (+1s Included)</span>
+                    <div id="statHeadcount" class="val">0</div>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <div class="panel-header">
+                    <h3>GUEST INGESTION CONSOLE</h3>
+                    <button id="openAddGuestModal" class="btn-primary"><i class="fas fa-plus"></i> Add New Guest</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Guest Name</th>
+                                <th>Category</th>
+                                <th>RSVP Status</th>
+                                <th>+1 Allowed</th>
+                                <th>Dietary Notes</th>
+                                <th>Personal Access Link</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestTableBody">
+                            <tr><td colspan="7" class="empty-state">Loading guest records...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="addGuestModal" class="modal-backdrop" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>REGISTER NEW GUEST PROFILE</h3>
+                <button id="closeAddGuestModal" class="close-btn">✕</button>
+            </div>
+            <form id="addGuestForm">
+                <input type="text" id="guestNameInput" placeholder="Guest Name (e.g., John Doe & Family)" required>
+                <input type="email" id="guestEmailInput" placeholder="Guest Email (Optional)">
+                <select id="guestCategorySelect" required>
+                    <option value="general" selected>General Guest Invite</option>
+                    <option value="entourage">Entourage Member Invite</option>
+                </select>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="plusOneAllowedCheck"> Allow +1 RSVP Allowance
+                </label>
+                <button type="submit" class="btn-primary">Generate Guest Token ↗</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="event-hq-client.js"></script>
+</body>
+</html>

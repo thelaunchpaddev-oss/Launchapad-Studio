@@ -14,10 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tabBriefs = document.getElementById('tabBriefs');
     const tabTemplates = document.getElementById('tabTemplates');
+    const tabEventHQ = document.getElementById('tabEventHQ');
     const tabSecurity = document.getElementById('tabSecurity');
 
     const viewBriefs = document.getElementById('viewBriefs');
     const viewTemplates = document.getElementById('viewTemplates');
+    const viewEventHQ = document.getElementById('viewEventHQ');
     const viewSecurity = document.getElementById('viewSecurity');
 
     const matrixGrid = document.getElementById('matrixGrid');
@@ -38,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const passForm = document.getElementById('passwordUpdateForm');
     const passStatus = document.getElementById('passUpdateStatus');
+
+    const provisionForm = document.getElementById('provisionCoupleForm');
+    const provisionStatus = document.getElementById('provisionStatus');
     
     const getSessionToken = () => localStorage.getItem('launcher_hq_session');
 
@@ -69,12 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         localStorage.setItem('launcher_hq_session', responseResult.token);
                         window.location.reload(); 
                     } else {
-                        authError.textContent = `❌ ERROR: ${responseResult.message}`;
+                        authError.textContent = `ERROR: ${responseResult.message}`;
                         authError.style.display = 'block';
                         authInput.value = '';
                     }
                 } catch (err) {
-                    authError.textContent = '❌ NETWORK PIPELINE ERROR INTERCEPTING VERIFICATION';
+                    authError.textContent = 'SYSTEM ERROR: PIPELINE INTERCEPTED VERIFICATION';
                     authError.style.display = 'block';
                 }
             });
@@ -82,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function clearActiveViewState() {
-        [tabBriefs, tabTemplates, tabSecurity].forEach(tab => tab?.classList.remove('active'));
-        [viewBriefs, viewTemplates, viewSecurity].forEach(view => { if (view) view.style.display = 'none'; });
+        [tabBriefs, tabTemplates, tabEventHQ, tabSecurity].forEach(tab => tab?.classList.remove('active'));
+        [viewBriefs, viewTemplates, viewEventHQ, viewSecurity].forEach(view => { if (view) view.style.display = 'none'; });
         if (sidebarPanel) {
             sidebarPanel.classList.remove('mobile-expanded');
             if (mobileMenuBtn) mobileMenuBtn.textContent = 'MENU ☰';
@@ -105,6 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
             tabTemplates.classList.add('active');
             viewTemplates.style.display = 'block';
             fetchCMSCatalog();
+        });
+    }
+
+    if (tabEventHQ) {
+        tabEventHQ.addEventListener('click', () => {
+            clearActiveViewState();
+            tabEventHQ.classList.add('active');
+            viewEventHQ.style.display = 'block';
+            populateTemplateDropdown();
+            fetchCouplesDirectory();
         });
     }
 
@@ -158,9 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const objectiveLabels = {
-            'custom': '🚀 Pre-Built Vault Framework',
-            'fullstack': '⚡ Custom Full-Stack App',
-            'consult': '📞 Strategy Call'
+            'custom': 'Pre-Built Vault Framework',
+            'fullstack': 'Custom Full-Stack App',
+            'consult': 'Strategy Call'
         };
 
         matrixGrid.innerHTML = briefs.map(brief => {
@@ -242,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('category', document.getElementById('tplCategory').value);
             formData.append('gradientStyle', document.getElementById('tplGradient').value);
             formData.append('vaultTargetUrl', document.getElementById('vaultTargetUrl').value.trim());
-            formData.append('bannerText', document.getElementById('tplBanner').value.trim() || '⚡ PRE-BUILT VAULT');
+            formData.append('bannerText', document.getElementById('tplBanner').value.trim() || 'READY FRAMEWORK');
             formData.append('description', document.getElementById('tplDescription').value.trim());
 
             const fileInput = document.getElementById('thumbnailFile'); 
@@ -265,12 +280,125 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (tplModalOverlay) tplModalOverlay.style.display = 'none';
                     await fetchCMSCatalog(); 
                 } else {
-                    alert(`❌ INGESTION REJECTED: ${result.message}`);
+                    alert(`INGESTION REJECTED: ${result.message}`);
                 }
-            } catch (err) { alert('❌ NETWORK TRANSMISSION ERROR EXECUTING FILE UPLOAD'); }
+            } catch (err) { alert('NETWORK TRANSMISSION ERROR EXECUTING FILE UPLOAD'); }
         });
     }
 
+    // --- DYNAMIC TEMPLATE LOADER FOR EVENT HQ PROVISION DROPDOWN ---
+    async function populateTemplateDropdown() {
+        const dropdown = document.getElementById('provTemplate');
+        if (!dropdown) return;
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`);
+            const result = await response.json();
+
+            if (result.success && result.data.length > 0) {
+                const eventTemplates = result.data.filter(t => t.category === 'invite');
+                
+                if (eventTemplates.length === 0) {
+                    dropdown.innerHTML = `<option value="" disabled selected>No 'invite' category templates found in system</option>`;
+                    return;
+                }
+
+                dropdown.innerHTML = eventTemplates.map(t => 
+                    `<option value="${t.title.toLowerCase().replace(/\s+/g, '-')}">${escapeHTML(t.title)}</option>`
+                ).join('');
+            } else {
+                dropdown.innerHTML = `<option value="" disabled selected>No templates found in system</option>`;
+            }
+        } catch (err) {
+            dropdown.innerHTML = `<option value="" disabled selected>Error loading templates from API</option>`;
+        }
+    }
+
+    // --- FETCH & RENDER PROVISIONED COUPLES DIRECTORY ---
+    async function fetchCouplesDirectory() {
+        const tableBody = document.getElementById('couplesTableBody');
+        if (!tableBody) return;
+
+        try {
+            const response = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/couples`);
+            const result = await response.json();
+
+            if (!result.success || !result.data || result.data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" style="padding:1.5rem; text-align:center; color:var(--text-muted);">No couples provisioned yet.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = result.data.map(c => `
+                <tr style="border-bottom: 1px solid var(--border-line);">
+                    <td style="padding:0.75rem;"><strong>${escapeHTML(c.coupleNames)}</strong></td>
+                    <td style="padding:0.75rem;">${escapeHTML(c.email)}</td>
+                    <td style="padding:0.75rem;"><code>${c.event ? c.event.slug : 'N/A'}</code></td>
+                    <td style="padding:0.75rem;">${c.guestCount}</td>
+                    <td style="padding:0.75rem;">
+                        <span style="color: ${c.isLocked ? '#ff3366' : '#00ff66'}; font-weight:bold;">
+                            ${c.isLocked ? 'LOCKED' : 'ACTIVE'}
+                        </span>
+                    </td>
+                    <td style="padding:0.75rem; display:flex; gap:0.4rem;">
+                        <button class="copy-btn" onclick="editCoupleCredentials('${c._id}', '${escapeHTML(c.email)}')">Edit Auth</button>
+                        <button class="copy-btn" style="border-color:${c.isLocked ? '#00ff66' : '#ff3366'}; color:${c.isLocked ? '#00ff66' : '#ff3366'};" onclick="toggleCoupleLock('${c._id}')">
+                            ${c.isLocked ? 'Unlock' : 'Lock'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+        } catch (err) {
+            tableBody.innerHTML = `<tr><td colspan="6" style="padding:1.5rem; text-align:center; color:#ff3366;">Error retrieving couples directory.</td></tr>`;
+        }
+    }
+
+    // --- PROVISION FORM SUBMIT WITH SEPARATE BRIDE & GROOM ---
+    if (provisionForm) {
+        provisionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            provisionStatus.style.display = 'none';
+
+            const payload = {
+                email: document.getElementById('provEmail').value.trim(),
+                password: document.getElementById('provPassword').value,
+                brideName: document.getElementById('provBrideName').value.trim(),
+                groomName: document.getElementById('provGroomName').value.trim(),
+                slug: document.getElementById('provSlug').value.trim(),
+                eventDate: document.getElementById('provEventDate').value,
+                venueName: document.getElementById('provVenueName').value.trim(),
+                venueAddress: document.getElementById('provVenueAddress').value.trim(),
+                googleMapsUrl: document.getElementById('provGoogleMapsUrl').value.trim(),
+                assignedTemplate: document.getElementById('provTemplate').value
+            };
+
+            try {
+                const response = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/provision-couple`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    provisionStatus.style.color = '#00ff66';
+                    provisionStatus.textContent = `SUCCESS: Provisioned portal for ${result.data.user.coupleNames}`;
+                    provisionStatus.style.display = 'block';
+                    provisionForm.reset();
+                    fetchCouplesDirectory();
+                } else {
+                    provisionStatus.style.color = '#ff3366';
+                    provisionStatus.textContent = `REJECTED: ${result.message}`;
+                    provisionStatus.style.display = 'block';
+                }
+            } catch (err) {
+                provisionStatus.style.color = '#ff3366';
+                provisionStatus.textContent = 'ERROR: Unable to provision couple profile.';
+                provisionStatus.style.display = 'block';
+            }
+        });
+    }
 
     if (passForm) {
         passForm.addEventListener('submit', async (e) => {
@@ -294,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (result.success) {
                     passStatus.style.color = '#00ff00';
-                    passStatus.textContent = '🟢 SUCCESS: Passkey rotated in MongoDB core. Logging out...';
+                    passStatus.textContent = 'SUCCESS: Passkey rotated in database core. Logging out...';
                     passStatus.style.display = 'block';
                     passForm.reset();
 
@@ -304,19 +432,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, 2000);
                 } else {
                     passStatus.style.color = '#ff3366';
-                    passStatus.textContent = `❌ REJECTED: ${result.message}`;
+                    passStatus.textContent = `REJECTED: ${result.message}`;
                     passStatus.style.display = 'block';
                 }
             } catch (err) {
                 passStatus.style.color = '#ff3366';
-                passStatus.textContent = '❌ ERROR: Failed to transmit security update to server core.';
+                passStatus.textContent = 'ERROR: Failed to transmit security update to server core.';
                 passStatus.style.display = 'block';
             }
         });
     }
 
+    // --- GLOBAL ACTIONS: EDIT CREDENTIALS & TOGGLE LOCK ---
+    window.editCoupleCredentials = async function(id, currentEmail) {
+        const newEmail = prompt('Update Login Email:', currentEmail);
+        const newPassword = prompt('Enter new password (leave blank to keep unchanged):');
+
+        if (newEmail === null) return;
+
+        const payload = {};
+        if (newEmail && newEmail.trim() !== currentEmail) payload.email = newEmail.trim();
+        if (newPassword) payload.newPassword = newPassword;
+
+        if (Object.keys(payload).length === 0) return;
+
+        try {
+            const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/update-couple-credentials/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (result.success) {
+                alert('SUCCESS: Credentials updated.');
+                fetchCouplesDirectory();
+            } else {
+                alert(`ERROR: ${result.message}`);
+            }
+        } catch (err) { alert('ERROR updating credentials'); }
+    };
+
+    window.toggleCoupleLock = async function(id) {
+        if (!confirm('Toggle lock status for this couple account?')) return;
+        try {
+            const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/toggle-lock/${id}`, { method: 'PUT' });
+            const result = await res.json();
+            if (result.success) {
+                fetchCouplesDirectory();
+            } else {
+                alert(`ERROR: ${result.message}`);
+            }
+        } catch (err) { alert('ERROR toggling lock status'); }
+    };
+
     window.purgeClientBrief = async function(id) {
-        if (!confirm('🛑 Permanent deletion entry tracking data profile. Continue?')) return;
+        if (!confirm('Permanent deletion entry tracking data profile. Continue?')) return;
         await fetch(`${CONFIG.API_BASE_URL}/api/commissions/${id}`, { 
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${getSessionToken()}` }
@@ -324,8 +494,17 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchOperationsMatrix();
     };
 
+    const eventDateInput = document.getElementById('provEventDate');
+    if (eventDateInput) {
+        eventDateInput.addEventListener('click', () => {
+            if (typeof eventDateInput.showPicker === 'function') {
+                eventDateInput.showPicker();
+            }
+        });
+    }
+
     window.purgePublishedTemplate = async function(id) {
-        if (!confirm('🛑 Unpublish and delete this template design?')) return;
+        if (!confirm('Unpublish and delete this template design?')) return;
         await fetch(`${CONFIG.API_BASE_URL}/api/templates/${id}`, { 
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${getSessionToken()}` }
@@ -337,5 +516,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!str) return '';
         return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
     }
+
     fetchOperationsMatrix();
 });

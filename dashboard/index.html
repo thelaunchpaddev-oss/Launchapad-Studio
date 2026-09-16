@@ -1,4 +1,3 @@
-<!-- Replace your dashboard.html with this updated structure -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +12,7 @@
 
     <div id="authGateOverlay" class="auth-gate-overlay">
         <div class="auth-gate-card">
-            <h2>🔒 LAUNCHER HQ // ACCESS RESTRICTED</h2>
+            <h2>LAUNCHER HQ // ACCESS RESTRICTED</h2>
             <form id="authGateForm">
                 <input type="password" id="gatePasskeyInput" placeholder="ENTER SYSTEM MASTER KEY..." required>
                 <button type="submit" class="btn-auth-submit">Decrypt Console ↗</button>
@@ -49,7 +48,7 @@
                 </select>
 
                 <input type="text" id="vaultTargetUrl" placeholder="Live Preview URL (e.g., https://dreamdough.vercel.app)" required>
-                <input type="text" id="tplBanner" placeholder="Banner Text (e.g., 🍰 BAKERY FRAMEWORK)" value="⚡ READY FRAMEWORK">
+                <input type="text" id="tplBanner" placeholder="Banner Text (e.g., BAKERY FRAMEWORK)" value="READY FRAMEWORK">
                 <input type="file" id="thumbnailFile" name="thumbnailFile" accept="image/*">
                 <textarea id="tplDescription" rows="4" placeholder="Plain-text benefit description written for the customer..." required></textarea>
                 
@@ -61,17 +60,18 @@
     <div class="app-container">
     
         <div class="mobile-header-bar">
-            <div class="brand-title-mobile">LAUNCHER<span>//STUDIO</span></div>
+            <div class="brand-title-mobile">L.STD<span>//CMS</span></div>
             <button id="mobileMenuToggleBtn" class="btn-mobile-toggle">MENU ☰</button>
         </div>
 
         <aside id="sidebarPanel">
             <div class="sidebar-main">
-                <div class="brand-title-desktop">LAUNCHER<span>//STUDIO</span></div>
+                <div class="brand-title-desktop">L.STD<span>//CMS</span></div>
                 <ul class="nav-links" id="navLinksList">
-                    <li class="nav-item active" id="tabBriefs">📡 Ingestion Matrix</li>
-                    <li class="nav-item" id="tabTemplates">🎨 Template Manager</li>
-                    <li class="nav-item" id="tabSecurity">🛡️ Security Manager</li>
+                    <li class="nav-item active" id="tabBriefs">Data Tracker</li>
+                    <li class="nav-item" id="tabTemplates">Template Manager</li>
+                    <li class="nav-item" id="tabEventHQ">Event HQ Provisioner</li>
+                    <li class="nav-item" id="tabSecurity">Security Manager</li>
                 </ul>
             </div>
             
@@ -118,6 +118,67 @@
                     <div id="templateCatalogGrid" class="matrix-grid"></div>
                 </div>
             </div>
+
+            <div id="viewEventHQ" style="display: none;">
+    <header>
+        <h1>EVENT HQ // COUPLE PROVISIONING SUITE</h1>
+    </header>
+
+    <div class="event-hq-grid-layout">
+        <!-- LEFT COLUMN: LIVE PROVISIONED COUPLES TABLE -->
+        <div class="catalog-display-vault">
+            <h3>PROVISIONED COUPLES DIRECTORY</h3>
+            <div class="table-wrapper" style="overflow-x:auto; margin-top: 1rem;">
+                <table style="width:100%; text-align:left; border-collapse:collapse; font-size:0.85rem;">
+                    <thead>
+                        <tr style="border-bottom:1px solid var(--border-line); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">
+                            <th style="padding:0.75rem;">Couple</th>
+                            <th style="padding:0.75rem;">Login Email</th>
+                            <th style="padding:0.75rem;">Slug</th>
+                            <th style="padding:0.75rem;">Guests</th>
+                            <th style="padding:0.75rem;">Status</th>
+                            <th style="padding:0.75rem;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="couplesTableBody">
+                        <tr><td colspan="6" style="padding:1.5rem; text-align:center; color:var(--text-muted);">Loading couple directory...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: PROVISION FORM -->
+        <div class="security-features-layout" style="margin:0;">
+            <div class="security-lock-card">
+                <div class="security-card-header-tag">[ ACC-02 // PROVISION EVENT ]</div>
+                <h3>PROVISION NEW COUPLE PORTAL</h3>
+                
+                <form id="provisionCoupleForm" class="cms-form-container">
+                    <input type="email" id="provEmail" placeholder="Couple Email (Login ID)..." required>
+                    <input type="password" id="provPassword" placeholder="Access Passcode..." required>
+                    
+                    <div style="display:flex; gap:0.5rem;">
+                        <input type="text" id="provBrideName" placeholder="Bride Name..." required style="width:50%;">
+                        <input type="text" id="provGroomName" placeholder="Groom Name..." required style="width:50%;">
+                    </div>
+
+                    <input type="text" id="provSlug" placeholder="URL Slug (e.g., alex-and-maria)..." required>
+                    <input type="date" id="provEventDate" required>
+                    <input type="text" id="provVenueName" placeholder="Venue Name..." required>
+                    <input type="text" id="provVenueAddress" placeholder="Venue Address..." required>
+                    <input type="text" id="provGoogleMapsUrl" placeholder="Google Maps URL (Optional)...">
+                    
+                    <select id="provTemplate" required>
+                        <option value="" disabled selected>Loading system templates...</option>
+                    </select>
+
+                    <button type="submit" class="btn-deploy">CREATE COUPLE PROFILE ↗</button>
+                </form>
+                <p id="provisionStatus" class="security-status-log" style="display: none;"></p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <div id="viewSecurity" style="display: none;">
                 <header>

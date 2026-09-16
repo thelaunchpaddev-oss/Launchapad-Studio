@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are Cordially Invited // Launcher HQ</title>
+    <link rel="icon" type="image/svg+xml" href="/Files/LaunchpadFAV.svg">
+    <link rel="stylesheet" href="event-hq-events.css">
+</head>
+<body>
+
+    <div class="invite-card">
+        <div id="errorContainer" class="error-banner"></div>
+
+        <div class="header-tag">// YOU ARE CORDIALLY INVITED</div>
+        <h1 id="eventTitle">CELEBRATION OF LOVE</h1>
+        <div id="guestGreeting" class="greeting">Dear Honored Guest,</div>
+
+        <div class="details-grid">
+            <div class="detail-item">
+                <label>Date & Time</label>
+                <span id="eventDate">Loading date...</span>
+            </div>
+            <div class="detail-item">
+                <label>Location Venue</label>
+                <span id="venueName">Loading venue...</span> — <span id="venueAddress">Loading address...</span>
+                <div><a id="mapLink" href="#" target="_blank" class="map-btn">📍 Open Navigation Map ↗</a></div>
+            </div>
+            <div class="detail-item">
+                <label>Dress Code</label>
+                <span id="dressCode">Formal Attire</span>
+            </div>
+        </div>
+
+        <div id="entourageSection" class="entourage-block" style="display: none;">
+            <h4>👑 VIP ENTOURAGE DIRECTIVE</h4>
+            <div class="entourage-detail">
+                <strong>Early Call Time:</strong> <span id="entourageCallTime">—</span>
+            </div>
+            <div id="entourageNotes" class="entourage-notes-text"></div>
+        </div>
+
+        <div class="rsvp-section">
+            <h3>CONFIRM YOUR RSVP ATTENDANCE</h3>
+            <form id="rsvpForm" class="rsvp-form-container">
+                <select id="rsvpStatusSelect" required>
+                    <option value="pending" disabled selected>Select Attendance Response...</option>
+                    <option value="attending">🟢 Attending (YES)</option>
+                    <option value="declined">🔴 Regretfully Decline (NO)</option>
+                </select>
+
+                <div id="plusOneGroup" style="display: none;">
+                    <label class="plus-one-label">Number of Additional +1 Guests:</label>
+                    <input type="number" id="plusOneInput" min="0" max="5" value="0">
+                </div>
+
+                <input type="text" id="dietaryInput" placeholder="Dietary Restrictions / Special Needs (Optional)">
+
+                <button type="submit">Submit RSVP Response ↗</button>
+            </form>
+            <div id="rsvpMessage" class="rsvp-status-message"></div>
+        </div>
+    </div>
+
+    <script src="/config.js"></script>
+    <script src="/event-hq-templates/event-hq-invite-engine.js"></script>
+</body>
+</html>
