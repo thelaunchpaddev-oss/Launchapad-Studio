@@ -3,24 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Launcher //Studio</title>
+    <title>Launcher // Studio</title>
     <link rel="icon" type="image/svg+xml" href="/Files/LaunchpadFAV.svg">
     <link rel="stylesheet" href="styles.css">
 
-    <!-- FontAwesome for loading spinners & icons -->
+    <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://launcher-studio.vercel.app">
-    <meta property="og:title" content="LAUNCHER STUDIO // High-Performance Web Engine">
-    <meta property="og:description" content="Fast, lightweight, hand-coded websites built to turn local visitors into customers. Zero page-builder bloat.">
+    <meta property="og:title" content="LAUNCHER STUDIO // High-Performance Web Development">
+    <meta property="og:description" content="Fast, custom-coded websites built to help local businesses attract more customers.">
     <meta property="og:image" content="https://launcher-studio.vercel.app/Files/og-preview.png">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://launcher-studio.vercel.app">
-    <meta name="twitter:title" content="LAUNCHER STUDIO // High-Performance Web Engine">
-    <meta name="twitter:description" content="Fast, lightweight, hand-coded websites built to turn local visitors into customers. Zero page-builder bloat.">
-    <meta name="twitter:image" content="https://launcher-studio.vercel.app/Files/og-preview.png">
 </head>
 <body>
 
@@ -31,141 +28,136 @@
             <button class="nav-toggle" aria-label="Toggle Menu" id="navToggle">
                 <span class="bar"></span>
                 <span class="bar"></span>
+                <span class="bar"></span>
             </button>
 
             <nav class="nav-menu" id="navMenu">
-                <a href="#mission">Our Approach</a>
+                <a href="#mission">Why Speed Matters</a>
                 <a href="#work">Ready Designs</a>
-                <a href="#contact" class="btn btn-nav-stark">Start Your Project</a>
+                <a href="#portal-feature">Client Portal</a>
+                <a href="#process">How It Works</a>
+                <a href="#contact" class="btn btn-nav-stark">Start Your Project ↗</a>
             </nav>
         </div>
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero-section">
+            <div class="hero-backdrop"></div>
             <div class="container hero-layout-grid">
                 <div class="hero-text-block anim-slide-left">
-                    <span class="hero-ticker">🔥 FAST, LIGHTWEIGHT, CUSTOM CODE</span>
-                    <h1>We build websites that turn visitors into customers.</h1>
-                    <p class="hero-lead">No generic templates. No slow, clunky page builders. Just clean, hand-coded websites meticulously designed to rank higher, load instantly, and grow your local business.</p>
+                    <span class="hero-ticker"><i class="fas fa-bolt"></i> FAST, CLEAN & CUSTOM-CODED</span>
+                    <h1>We build websites that turn site visitors into paying customers.</h1>
+                    <p class="hero-lead">No clunky site builders. No slow plugins. We write clean code so your website loads instantly on mobile, ranks better on Google, and makes it easy for local clients to get in touch with you.</p>
                     <div class="hero-cta-group anim-fade-up delay-1">
-                        <a href="#work" class="btn btn-stark-primary">See Our Designs</a>
-                        <a href="#mission" class="btn btn-stark-link">Why Speed Matters ↓</a>
+                        <a href="#work" class="btn btn-stark-primary">View Ready Designs ↗</a>
+                        <a href="#mission" class="btn btn-stark-link">See How We Help ↓</a>
                     </div>
                 </div>
+
                 <div class="hero-stats-block anim-slide-right delay-2">
-                    <div class="stat-box">
+                    <div class="floating-card">
+                        <div class="stat-header">
+                            <span class="pulse-indicator"></span>
+                            <span class="stat-tag">SYSTEM STATUS: ACTIVE</span>
+                        </div>
                         <div class="stat-num" id="templateCounter">
                             <i class="fas fa-spinner fa-spin" style="font-size: 0.8em; opacity: 0.6;"></i>
                         </div>
                         <div class="stat-label">Ready-to-Customize Website Frameworks</div>
+                        <div class="stat-footer-bar">
+                            <span><i class="fas fa-mobile-alt"></i> 100% Mobile Ready</span>
+                            <span><i class="fas fa-tachometer-alt"></i> Instant Loading</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Why Speed Matters Section -->
         <section id="mission" class="mission-section">
             <div class="container mission-grid">
                 <div class="grid-left-sticky anim-slide-left">
-                    <span class="section-indicator">// OUR STRATEGY</span>
-                    <h2>Engineered to win more local customers.</h2>
+                    <span class="section-indicator">// OUR APPROACH</span>
+                    <h2>Built to grow your business, not just look pretty.</h2>
                 </div>
                 <div class="grid-right-content anim-slide-right delay-1">
-                    
-                    <div class="philosophy-block">
-                        <h4>01 / Built to Load Instantly</h4>
-                        <p>
-                            Most business websites are weighed down by messy, hidden code that makes pages lag on mobile phones. Every extra second a potential customer spends waiting for your page to open is a moment they might leave for a competitor. We build our sites from scratch so they load immediately, keeping your clients engaged from the first click.
-                        </p>
+                    <div class="philosophy-block hover-lift">
+                        <h4>01 / Loads Instantly on Every Phone</h4>
+                        <p>Most small business websites lag because of heavy templates and unnecessary code. Every second a potential client spends waiting is a client lost to your competitor. Our websites open immediately.</p>
                     </div>
 
-                    <div class="philosophy-block">
-                        <h4>02 / Hassle-Free Reliability</h4>
-                        <p>
-                            Relying on standard template setups means constantly worrying about broken updates, sudden crashes, or security risks. Our hand-crafted, clean architecture runs smoothly in the background without needing a messy web of plugins. This gives you peace of mind and complete ownership over a system that just works.
-                        </p>
+                    <div class="philosophy-block hover-lift">
+                        <h4>02 / No Constant Breakage or Plugin Updates</h4>
+                        <p>Standard website setups break when plugins auto-update. We hand-code our architecture from scratch so your website runs reliably 24/7 without needing constant troubleshooting.</p>
                     </div>
 
-                    <div class="philosophy-block">
-                        <h4>03 / Designed to Grow Your Business</h4>
-                        <p>
-                            A beautiful website is only successful if your target audience can easily find it and knows exactly how to reach you. We structure your layout to rank cleanly on search engines and design clear call-to-actions, making it simple for everyday visitors to drop their details and become paying customers.
-                        </p>
+                    <div class="philosophy-block hover-lift">
+                        <h4>03 / Clear Steps for Visitors to Contact You</h4>
+                        <p>A great website makes it obvious what to do next. We structure your content with clear buttons and simple contact options so interested visitors can message or call you right away.</p>
                     </div>
-
                 </div>
             </div>
         </section>
 
+        <!-- Ready Designs Vault Section -->
         <section id="work" class="work-section">
             <div class="container">
                 <div class="work-section-header anim-slide-left">
-                    <span class="section-indicator">// CHOOSE YOUR FRAMEWORK</span>
-                    <h2>The Ready-to-Go Layout Vault</h2>
-                    <p>A showcase of our high-performance blueprints built specifically for local commercial niches.</p>
+                    <span class="section-indicator">// WEBSITE FRAMEWORKS</span>
+                    <h2>Ready-to-Customize Design Templates</h2>
+                    <p class="section-subtitle">Browse through our pre-built, high-performance layouts tailored for local business niches.</p>
                 </div>
 
                 <div class="filter-controls anim-fade-up delay-1">
                     <button class="filter-btn active" data-filter="all">All Industries</button>
                     <button class="filter-btn" data-filter="bakery">Bakeries & Food</button>
-                    <button class="filter-btn" data-filter="conversion">Booking & Leads</button>
+                    <button class="filter-btn" data-filter="conversion">Services & Leads</button>
                     <button class="filter-btn" data-filter="visual">Visual & Creative</button>
-                    <button class="filter-btn" data-filter="invite">Event E-Invitations</button>
+                    <button class="filter-btn" data-filter="invite">Event Invitations</button>
                 </div>
 
-                <div class="work-matrix-grid anim-fade-up delay-2" id="projectMatrix">
-                </div>
+                <div class="work-matrix-grid anim-fade-up delay-2" id="projectMatrix"></div>
             </div>
         </section>
 
+        <!-- Client Portal Feature Section -->
         <section id="portal-feature" class="portal-feature-section">
             <div class="container portal-grid">
                 <div class="portal-text-block anim-slide-left">
-                    <span class="section-indicator">// TOTAL CONTROL</span>
-                    <h2>Manage your business without touching code.</h2>
-                    <p class="portal-lead">
-                        Never get locked out of your own website. With our <strong>Dynamic Engine (Tier 2)</strong>, you get a custom, mobile-friendly Owner Portal designed specifically for your phone or laptop.
-                    </p>
+                    <span class="section-indicator">// EASY CONTENT MANAGEMENT</span>
+                    <h2>Update your website content anytime from your phone.</h2>
+                    <p class="portal-lead">You don't need technical skills to keep your site updated. Our dynamic setups include a private, mobile-friendly dashboard built specifically for your business.</p>
                     <ul class="portal-benefits-list">
-                        <li><i class="fas fa-check-circle"></i> <strong>Post New Products in Seconds:</strong> Upload phone photos directly to your gallery.</li>
-                        <li><i class="fas fa-check-circle"></i> <strong>Update Prices & Menus:</strong> Change rates or hide out-of-stock items instantly.</li>
-                        <li><i class="fas fa-check-circle"></i> <strong>Zero Maintenance Stress:</strong> No clunky plugins to update, no security crashes.</li>
+                        <li><i class="fas fa-check-circle"></i> <span><strong>Upload New Photos in Seconds:</strong> Take a photo with your phone and upload it straight to your live gallery.</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span><strong>Update Prices & Offerings:</strong> Quickly edit rates, menu items, or service lists whenever you need to.</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span><strong>Hassle-Free Maintenance:</strong> Enjoy an owner portal that works without complex admin settings.</span></li>
                     </ul>
-                    
-                    <!-- ⚡ SUBTLE DASHBOARD & EVENT HQ ACCESS TRIGGERS -->
-                    <div class="portal-access-wrapper" style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <a href="/dashboard/" class="subtle-portal-btn">
-                            <i class="fas fa-lock-open"></i> Master Admin HQ ↗
-                        </a>
-                        <a href="/event-hq-client-portal/" class="subtle-portal-btn" style="border-color: rgba(0, 240, 255, 0.4); color: var(--neon-cyan);">
-                            <i class="fas fa-heart"></i> Couple Event Portal ↗
-                        </a>
-                    </div>
                 </div>
                 
-                <div class="portal-preview-card anim-slide-right delay-1">
-                    <div class="portal-sample-ribbon">SAMPLE PREVIEW</div>
-
+                <div class="portal-preview-card anim-slide-right delay-1 hover-lift">
+                    <div class="portal-sample-ribbon">LIVE PREVIEW</div>
                     <div class="portal-card-header">
                         <span class="dot red"></span>
                         <span class="dot yellow"></span>
                         <span class="dot green"></span>
-                        <span class="console-title">LAUNCHER HQ // OWNER PORTAL</span>
+                        <span class="console-title">CLIENT OWNER PORTAL</span>
                     </div>
                     <div class="portal-card-body">
                         <div class="mock-input-group">
-                            <label>ACTION STATUS</label>
-                            <div class="mock-badge">🟢 LIVE PRODUCTION ENGINE</div>
+                            <label>SYSTEM STATUS</label>
+                            <div class="mock-badge">🟢 ONLINE & READY</div>
                         </div>
                         <div class="mock-input-group">
-                            <label>UPLOAD NEW CREATION</label>
+                            <label>ADD NEW ITEM PHOTO</label>
                             <div class="mock-upload-zone">
                                 <i class="fas fa-cloud-upload-alt"></i>
-                                <span>Tap to upload high-res cake or product photo</span>
+                                <span>Tap to select or take photo on phone</span>
                             </div>
                         </div>
                         <div class="mock-input-row">
-                            <input type="text" value="Pastel Floral Layer Cake" readonly>
+                            <input type="text" value="Custom Layered Cake" readonly>
                             <input type="text" value="₱1,800" readonly>
                         </div>
                         <button class="mock-btn-publish" onclick="return false;">Publish to Live Gallery ↗</button>
@@ -174,43 +166,42 @@
             </div>
         </section>
 
+        <!-- Process Pipeline Section -->
         <section id="process" class="process-section">
             <div class="container">
-                <div class="text-center anim-slide-left" style="margin-bottom: 32px;">
-                    <span class="section-indicator">// TRANSPARENT WORKFLOW</span>
-                    <h2>From First Chat to Live Launch in Days</h2>
-                    <p style="color: var(--text-muted); margin-top: 8px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                        We follow a strict 4-step delivery pipeline so you know exactly what to expect at every milestone.
-                    </p>
+                <div class="text-center anim-slide-left header-margin">
+                    <span class="section-indicator">// OUR WORKFLOW</span>
+                    <h2>From Idea to Live Website in Days</h2>
+                    <p class="section-subtitle">We follow a simple 4-step process so your project stays on schedule without any surprises.</p>
                 </div>
 
                 <div class="pipeline-grid anim-fade-up delay-1">
-                    <div class="pipeline-card">
+                    <div class="pipeline-card hover-lift">
                         <div class="step-num">01</div>
                         <h4>Onboarding</h4>
                         <span class="time-tag">1–2 Days</span>
-                        <p>We collect your logo, product photos, contact details, and menu list using a simple questionnaire.</p>
+                        <p>We gather your logo, business details, photos, and menu items using a quick questionnaire.</p>
                     </div>
 
-                    <div class="pipeline-card">
+                    <div class="pipeline-card hover-lift">
                         <div class="step-num">02</div>
-                        <h4>Design & Branding</h4>
+                        <h4>Design & Layout</h4>
                         <span class="time-tag">2–3 Days</span>
-                        <p>We craft a custom visual layout tailored specifically to your brand colors and target market.</p>
+                        <p>We prepare a custom visual design tailored to your brand colors and target customers.</p>
                     </div>
 
-                    <div class="pipeline-card">
+                    <div class="pipeline-card hover-lift">
                         <div class="step-num">03</div>
-                        <h4>Custom Build</h4>
+                        <h4>Development</h4>
                         <span class="time-tag">3–7 Days</span>
-                        <p>We hand-code your site, set up database pipelines, and test mobile responsiveness across devices.</p>
+                        <p>We build your website code, set up your owner dashboard, and test performance on mobile screens.</p>
                     </div>
 
-                    <div class="pipeline-card">
+                    <div class="pipeline-card hover-lift">
                         <div class="step-num">04</div>
-                        <h4>Go-Live</h4>
+                        <h4>Launch</h4>
                         <span class="time-tag">1–2 Days</span>
-                        <p>Final review, domain connection, and handover of your private admin credentials!</p>
+                        <p>We link your custom domain, perform final speed checks, and hand over your private login keys!</p>
                     </div>
                 </div>
 
@@ -218,20 +209,21 @@
                     <div class="warranty-badge">
                         <div class="warranty-icon"><i class="fas fa-shield-alt"></i></div>
                         <div class="warranty-text">
-                            <h4>30-Day Technical Support Guarantee</h4>
-                            <p>Every website launch includes 30 days of complimentary technical maintenance to cover any bug fixes or display updates.</p>
+                            <h4>30-Day Support Included</h4>
+                            <p>Every website launch includes 30 days of free technical support to handle any minor text adjustments or post-launch updates.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Contact Form Section -->
         <section id="contact" class="contact-section">
             <div class="container contact-max-width">
-                <div class="text-center anim-slide-left" style="margin-bottom: 32px;">
-                    <span class="section-indicator">// WORK WITH US</span>
-                    <h2>Let's Build Your Website</h2>
-                    <p style="color: #999999; margin-top: 8px;">Tell us what you are looking for, and let's launch an asset that works for your business.</p>
+                <div class="text-center anim-slide-left header-margin">
+                    <span class="section-indicator">// START YOUR PROJECT</span>
+                    <h2>Ready for a Better Website?</h2>
+                    <p class="section-subtitle">Fill out the form below and let us know what you need. We will reach back out to you quickly.</p>
                 </div>
 
                 <form id="agencyForm" class="agency-intake-form anim-fade-up delay-1">
@@ -241,14 +233,14 @@
                     </div>
                     <div class="stark-input-group">
                         <select id="bizGoal" required>
-                            <option value="" disabled selected>What is your main objective?</option>
-                            <option value="custom">Launch a Pre-Built Vault Framework</option>
-                            <option value="fullstack">Build a Custom Full-Stack Data App</option>
-                            <option value="consult">Book an Optimization Strategy Call</option>
+                            <option value="" disabled selected>What is your main goal?</option>
+                            <option value="custom">Customize a Ready Design Template</option>
+                            <option value="fullstack">Build a Custom Web Application</option>
+                            <option value="consult">Book a Free Strategy Consultation</option>
                         </select>
                     </div>
                     <div class="stark-input-group">
-                        <textarea id="bizBrief" rows="5" placeholder="Tell us about your business goals, target audience, specific features you need, or project timeline..."></textarea>
+                        <textarea id="bizBrief" rows="5" placeholder="Tell us about your business, the features you need, or your target launch date..."></textarea>
                     </div>
                     <button type="submit" class="btn btn-stark-submit">Send Project Details →</button>
                 </form>
@@ -256,10 +248,21 @@
         </section>
     </main>
 
+    <!-- Footer with Clean Utility Access Bar -->
     <footer class="site-footer">
-        <div class="container footer-grid">
-            <p>&copy; 2026 LAUNCHER STUDIO. All Rights Reserved.</p>
-            <p class="attribution">Developed by <a href="mailto:the.launchpaddev@gmail.com">The launcher Dev</a></p>
+        <div class="container">
+            <div class="footer-grid">
+                <p>&copy; 2026 LAUNCHER STUDIO. All Rights Reserved.</p>
+                
+                <!-- Clean Management Links moved to Footer -->
+                <div class="footer-admin-links">
+                    <a href="/dashboard/" class="footer-portal-link"><i class="fas fa-lock"></i> Admin HQ</a>
+                    <span class="divider">•</span>
+                    <a href="/event-hq-client-portal/" class="footer-portal-link"><i class="fas fa-heart"></i> Couple Portal</a>
+                </div>
+
+                <p class="attribution">Developed by <a href="mailto:the.launchpaddev@gmail.com">Launcher Dev</a></p>
+            </div>
         </div>
     </footer>
 
