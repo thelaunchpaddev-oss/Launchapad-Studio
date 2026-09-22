@@ -1,11 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const authOverlay = document.getElementById('clientAuthOverlay');
+    // Views & Modals
+    const publicShowcaseView = document.getElementById('publicShowcaseView');
+    const protectedConsoleView = document.getElementById('protectedConsoleView');
+
+    const clientAuthModal = document.getElementById('clientAuthModal');
+    const openAuthModalBtn = document.getElementById('openAuthModalBtn');
+    const heroAuthTrigger = document.getElementById('heroAuthTrigger');
+    const closeAuthModal = document.getElementById('closeAuthModal');
+
     const loginForm = document.getElementById('clientLoginForm');
     const loginEmail = document.getElementById('loginEmail');
     const loginPass = document.getElementById('loginPass');
     const loginError = document.getElementById('loginError');
     const logoutBtn = document.getElementById('logoutBtn');
 
+    // Dashboard Data Nodes
     const displayCoupleNames = document.getElementById('displayCoupleNames');
     const guestTableBody = document.getElementById('guestTableBody');
 
@@ -14,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const statDeclined = document.getElementById('statDeclined');
     const statHeadcount = document.getElementById('statHeadcount');
 
+    // Add Guest Modal
     const addGuestModal = document.getElementById('addGuestModal');
     const openAddGuestModal = document.getElementById('openAddGuestModal');
     const closeAddGuestModal = document.getElementById('closeAddGuestModal');
@@ -23,11 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getToken = () => localStorage.getItem('event_hq_token');
 
-    if (getToken()) {
-        if (authOverlay) authOverlay.remove();
-        loadDashboardData();
+    // --- VIEW SWITCHING LOGIC ---
+    function updateViewState() {
+        if (getToken()) {
+            if (publicShowcaseView) publicShowcaseView.style.display = 'none';
+            if (protectedConsoleView) protectedConsoleView.style.display = 'block';
+            if (openAuthModalBtn) openAuthModalBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'inline-block';
+            loadDashboardData();
+        } else {
+            if (publicShowcaseView) publicShowcaseView.style.display = 'block';
+            if (protectedConsoleView) protectedConsoleView.style.display = 'none';
+            if (openAuthModalBtn) openAuthModalBtn.style.display = 'inline-block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+        }
     }
 
+    // Modal Triggers
+    const openModal = () => { if (clientAuthModal) clientAuthModal.style.display = 'flex'; };
+    const closeModal = () => { if (clientAuthModal) clientAuthModal.style.display = 'none'; };
+
+    if (openAuthModalBtn) openAuthModalBtn.onclick = openModal;
+    if (heroAuthTrigger) heroAuthTrigger.onclick = openModal;
+    if (closeAuthModal) closeAuthModal.onclick = closeModal;
+
+    // Login Submission
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -43,25 +73,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (result.success) {
                     localStorage.setItem('event_hq_token', result.token);
-                    window.location.reload();
+                    closeModal();
+                    updateViewState();
                 } else {
-                    loginError.textContent = `❌ ${result.message}`;
+                    loginError.textContent = `⚠️ ${result.message}`;
                     loginError.style.display = 'block';
                 }
             } catch (err) {
-                loginError.textContent = '❌ Authentication server fault';
+                loginError.textContent = '⚠️ Authentication server connection fault.';
                 loginError.style.display = 'block';
             }
         });
     }
 
+    // Logout Action
     if (logoutBtn) {
         logoutBtn.onclick = () => {
             localStorage.removeItem('event_hq_token');
-            window.location.reload();
+            updateViewState();
         };
     }
 
+    // Load Dashboard Data
     async function loadDashboardData() {
         try {
             const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/client/dashboard-stats`, {
@@ -69,17 +102,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await res.json();
 
-            if (!result.success) return;
+            if (!result.success) {
+                localStorage.removeItem('event_hq_token');
+                updateViewState();
+                return;
+            }
 
             const { event, summary, guests } = result.data;
             currentEventSlug = event.slug;
 
-            if (displayCoupleNames) displayCoupleNames.textContent = `${event.venueName} Console`;
+            if (displayCoupleNames) displayCoupleNames.textContent = `${event.venueName || 'Event'} Console`;
 
-            if (statTotalLogged) statTotalLogged.textContent = summary.totalGuestsLogged;
-            if (statAttending) statAttending.textContent = summary.attendingCount;
-            if (statDeclined) statDeclined.textContent = summary.declinedCount;
-            if (statHeadcount) statHeadcount.textContent = summary.totalHeadcount;
+            if (statTotalLogged) statTotalLogged.textContent = summary.totalGuestsLogged || '0';
+            if (statAttending) statAttending.textContent = summary.attendingCount || '0';
+            if (statDeclined) statDeclined.textContent = summary.declinedCount || '0';
+            if (statHeadcount) statHeadcount.textContent = summary.totalHeadcount || '0';
 
             renderGuestTable(guests);
         } catch (err) {
@@ -87,10 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Render Table
     function renderGuestTable(guests) {
         if (!guestTableBody) return;
         if (!guests || guests.length === 0) {
-            guestTableBody.innerHTML = `<tr><td colspan="7" class="empty-state">No guests registered yet. Click "Add New Guest" to begin.</td></tr>`;
+            guestTableBody.innerHTML = `<tr><td colspan="7" class="empty-state">No guests registered yet. Click "Add New Guest" above to begin.</td></tr>`;
             return;
         }
 
@@ -104,21 +142,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td><strong>${escapeHTML(g.guestName)}</strong></td>
                     <td><span class="badge ${g.category}">${g.category}</span></td>
                     <td><span class="badge ${g.rsvpStatus}">${g.rsvpStatus}</span></td>
-                    <td>${g.plusOneAllowed ? `Yes (+${g.plusOneCount})` : 'No'}</td>
+                    <td>${g.plusOneAllowed ? `Yes (+${g.plusOneCount || 1})` : 'No'}</td>
                     <td>${escapeHTML(g.dietaryRestrictions) || '—'}</td>
                     <td>
-                        <button class="copy-btn" onclick="copyLink('${inviteUrl}')">📋 Copy Link</button>
+                        <button class="copy-btn" onclick="copyLink('${inviteUrl}')"><i class="far fa-copy"></i> Copy Link</button>
                     </td>
                     <td>
-                        <button class="close-btn" onclick="deleteGuest('${g._id}')" style="color:var(--accent-red)">🗑️</button>
+                        <button class="action-delete-btn" onclick="deleteGuest('${g._id}')" title="Delete Guest"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
             `;
         }).join('');
     }
 
-    if (openAddGuestModal) openAddGuestModal.onclick = () => addGuestModal.style.display = 'flex';
-    if (closeAddGuestModal) closeAddGuestModal.onclick = () => addGuestModal.style.display = 'none';
+    // Modal Control for Add Guest
+    if (openAddGuestModal) openAddGuestModal.onclick = () => { if (addGuestModal) addGuestModal.style.display = 'flex'; };
+    if (closeAddGuestModal) closeAddGuestModal.onclick = () => { if (addGuestModal) addGuestModal.style.display = 'none'; };
 
     if (addGuestForm) {
         addGuestForm.addEventListener('submit', async (e) => {
@@ -141,22 +180,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await res.json();
                 if (result.success) {
                     addGuestForm.reset();
-                    addGuestModal.style.display = 'none';
+                    if (addGuestModal) addGuestModal.style.display = 'none';
                     loadDashboardData();
                 } else {
-                    alert(`❌ Failed to add guest: ${result.message}`);
+                    alert(`⚠️ Failed to add guest: ${result.message}`);
                 }
-            } catch (err) { alert('❌ Error processing request'); }
+            } catch (err) { alert('⚠️ Error processing request.'); }
         });
     }
 
+    // Global Action Wrappers
     window.copyLink = (url) => {
         navigator.clipboard.writeText(url);
         alert('📋 Personal invitation link copied to clipboard!');
     };
 
     window.deleteGuest = async (id) => {
-        if (!confirm('Purge this guest record?')) return;
+        if (!confirm('Purge this guest record permanently?')) return;
         await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/client/delete-guest/${id}`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${getToken()}` }
@@ -168,4 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!str) return '';
         return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
     }
+
+    // Initial state check
+    updateViewState();
 });
