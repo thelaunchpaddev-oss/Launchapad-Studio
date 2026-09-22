@@ -9,27 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================================================
     // 0. DIRECTIONAL SCROLL REVEAL OBSERVER ENGINE
     // ==========================================================================
-    const animatedElements = document.querySelectorAll('.anim-slide-left, .anim-slide-right, .anim-fade-up');
+    function initScrollObserver() {
+        const animatedElements = document.querySelectorAll('.anim-slide-left, .anim-slide-right, .anim-fade-up, .adv-card, .matrix-item, .step-card, .pf-item');
 
-    const observerOptions = {
-        root: null,
-        threshold: 0.15 // Triggers smoothly when 15% of the element enters view
-    };
+        const observerOptions = {
+            root: null,
+            threshold: 0.10
+        };
 
-    const scrollObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-revealed');
-            } else {
-                // Remove class on exit so text and cards re-slide when scrolling back
-                entry.target.classList.remove('is-revealed');
-            }
-        });
-    }, observerOptions);
+        const scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-revealed');
+                } else {
+                    entry.target.classList.remove('is-revealed');
+                }
+            });
+        }, observerOptions);
 
-    animatedElements.forEach(el => {
-        scrollObserver.observe(el);
-    });
+        animatedElements.forEach(el => scrollObserver.observe(el));
+    }
 
     // ==========================================================================
     // 1. DIGITAL CMS: FETCH AND RENDER DATABASE WORK FRAMEWORKS
@@ -42,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         matrixGrid.innerHTML = `
-            <div class="matrix-loader-wrapper" style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: #00f0ff;">
+            <div class="matrix-loader-wrapper" style="grid-column: 1 / -1; text-align: center; padding: 4rem; color: #2563EB;">
                 <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
                 <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8;">Synchronizing Live Design Vault...</p>
             </div>
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('CMS Content Sync Fault:', error);
             if (templateCounter) templateCounter.textContent = "00";
-            matrixGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ff3366; padding:2rem; font-family:monospace;">⚠️ CONNECTION ERROR: Unable to load design matrix.</div>`;
+            matrixGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:2rem; font-family:monospace;">⚠️ CONNECTION ERROR: Unable to load design matrix.</div>`;
         }
     }
 
@@ -77,9 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
         matrixGrid.innerHTML = templates.map(tpl => {
             const actionButton = tpl.livePreviewUrl 
                 ? `<a href="${tpl.livePreviewUrl}" target="_blank" rel="noopener noreferrer" class="matrix-btn-blueprint">Explore Live Demo ↗</a>`
-                : `<span class="matrix-fallback-tag">Blueprint Deploying Soon</span>`; 
+                : `<span class="matrix-fallback-tag" style="font-size: 11px; color: #9CA3AF; text-align: center; display: block;">Blueprint Deploying Soon</span>`; 
 
-            const backgroundGradient = tpl.gradientStyle || 'linear-gradient(135deg, #00f0ff 0%, #1a2035 100%)';
+            const backgroundGradient = tpl.gradientStyle || 'linear-gradient(135deg, #2563EB 0%, #111827 100%)';
 
             const imageUrl = tpl.thumbnailUrl 
                 ? (tpl.thumbnailUrl.startsWith('http') ? tpl.thumbnailUrl : `${CONFIG.API_BASE_URL}${tpl.thumbnailUrl}`)
@@ -88,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const imageViewportHTML = imageUrl 
                 ? `<div class="image-viewport">
                        <img src="${imageUrl}" alt="${escapeText(tpl.title)}" loading="lazy" decoding="async" fetchpriority="low">
+                       <div class="hover-preview-overlay">
+                           <span class="preview-badge">View Live Demo ↗</span>
+                       </div>
                    </div>` 
                 : `<div class="image-viewport fallback-mesh" style="background: ${backgroundGradient} !important;">
                        <span class="mesh-banner-text">${escapeText(tpl.bannerText || '⚡ PRE-BUILT VAULT')}</span>
@@ -111,20 +113,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join(''); 
 
         initializeFilterEngine(); 
+        initScrollObserver();
     }
 
     // ==========================================================================
     // 2. INTERACTIVE PORTFOLIO FILTER ENGINE
     // ==========================================================================
     function initializeFilterEngine() {
-        const filterButtons = document.querySelectorAll('.filter-btn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
         const matrixItems = document.querySelectorAll('.matrix-item');
 
-        if (!filterButtons.length || !matrixItems.length) return;
+        if (!filterBtns.length || !matrixItems.length) return;
 
-        filterButtons.forEach(btn => {
+        filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                filterButtons.forEach(b => b.classList.remove('active'));
+                filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
                 const selectedFilter = btn.getAttribute('data-filter');
@@ -177,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (result.success) {
                     showModalNotification(
                         'INQUIRY RECEIVED', 
-                        `Thank you, <strong>${escapeText(bizName)}</strong>. Your inquiry has been logged successfully.<br><br>Our team will review your specifications and contact you directly at <span style="color: #00f0ff;">${escapeText(bizEmail)}</span>.`, 
+                        `Thank you, <strong>${escapeText(bizName)}</strong>. Your inquiry has been logged successfully.<br><br>Our team will review your specifications and contact you directly at <span style="color: #2563EB; font-weight: 700;">${escapeText(bizEmail)}</span>.`, 
                         'success'
                     );
                     agencyForm.reset();
@@ -197,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================================================
-    // 4. PROFESSIONAL CENTERED MODAL NOTIFICATION
+    // 4. MODAL NOTIFICATION ENGINE
     // ==========================================================================
     function showModalNotification(title, message, type = 'success') {
         let modalOverlay = document.getElementById('noticeModalOverlay');
@@ -211,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 left: 0;
                 width: 100vw;
                 height: 100vh;
-                background: rgba(6, 7, 9, 0.85);
+                background: rgba(17, 24, 39, 0.75);
                 backdrop-filter: blur(8px);
                 z-index: 99999;
                 display: flex;
@@ -226,17 +229,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const isSuccess = type === 'success';
-        const borderColor = isSuccess ? '#00f0ff' : '#ff3366';
+        const borderColor = isSuccess ? '#2563EB' : '#ef4444';
 
         modalOverlay.innerHTML = `
             <div style="
-                background: #0d0f16;
+                background: #FFFFFF;
                 border: 1px solid ${borderColor};
-                border-radius: 8px;
+                border-radius: 12px;
                 max-width: 440px;
                 width: 100%;
                 padding: 2rem;
-                box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+                box-shadow: 0 20px 50px rgba(0,0,0,0.15);
                 font-family: inherit;
                 box-sizing: border-box;
                 text-align: center;
@@ -255,15 +258,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="
                     font-size: 0.9rem; 
                     line-height: 1.6; 
-                    color: #cbd5e1; 
+                    color: #4B5563; 
                     margin-bottom: 1.75rem;
                 ">${message}</div>
 
-                <button id="closeNoticeBtn" class="btn btn-stark-primary" style="
+                <button id="closeNoticeBtn" style="
                     width: 100%;
                     padding: 0.75rem;
                     cursor: pointer;
                     font-family: inherit;
+                    background: #111827;
+                    color: #FFFFFF;
+                    border: none;
+                    border-radius: 8px;
+                    font-weight: 700;
                 ">Acknowledge</button>
             </div>
         `;
@@ -293,10 +301,22 @@ document.addEventListener('DOMContentLoaded', () => {
         return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
     }
 
+    // Initialize Observer & Fetch Initial Data
+    initScrollObserver();
     fetchLiveFrameworks();
+
+    // Reveal elements already in viewport on initial load
+    setTimeout(() => {
+        document.querySelectorAll('.anim-slide-left, .anim-slide-right, .anim-fade-up, .adv-card, .pf-item').forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight) {
+                el.classList.add('is-revealed');
+            }
+        });
+    }, 100);
 });
 
-// --- MOBILE NAVBAR TOGGLE INTERACTION ---
+// Mobile Nav Toggle Interaction
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
 
@@ -306,7 +326,7 @@ if (navToggle && navMenu) {
         navMenu.classList.toggle('active');
     });
 
-    document.querySelectorAll('.nav-menu a').forEach(link => {
+    document.querySelectorAll('.pill-nav a').forEach(link => {
         link.addEventListener('click', () => {
             navToggle.classList.remove('active');
             navMenu.classList.remove('active');
