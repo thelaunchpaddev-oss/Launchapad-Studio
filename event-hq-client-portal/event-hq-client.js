@@ -57,11 +57,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (heroAuthTrigger) heroAuthTrigger.onclick = openModal;
     if (closeAuthModal) closeAuthModal.onclick = closeModal;
 
-    // Login Submission
+    // Login Submission with Cold-Start Timeout Protection
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!loginError) return;
+
             loginError.style.display = 'none';
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Authenticate Console ↗';
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Authenticating...`;
+            }
+
+            // Warm-up alert timer if request takes longer than 3 seconds
+            const slowServerTimer = setTimeout(() => {
+                loginError.innerHTML = `<i class="fas fa-bolt"></i> Server is waking up from idle mode, please wait...`;
+                loginError.style.display = 'block';
+                loginError.style.color = '#F59E0B'; // Amber notice
+            }, 3000);
 
             try {
                 const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/client/login`, {
@@ -69,19 +85,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: loginEmail.value, password: loginPass.value })
                 });
+
+                clearTimeout(slowServerTimer);
                 const result = await res.json();
 
                 if (result.success) {
                     localStorage.setItem('event_hq_token', result.token);
+                    loginForm.reset();
                     closeModal();
                     updateViewState();
                 } else {
                     loginError.textContent = `⚠️ ${result.message}`;
+                    loginError.style.color = '#EF4444'; // Red error
                     loginError.style.display = 'block';
                 }
             } catch (err) {
+                clearTimeout(slowServerTimer);
                 loginError.textContent = '⚠️ Authentication server connection fault.';
+                loginError.style.color = '#EF4444';
                 loginError.style.display = 'block';
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
             }
         });
     }
@@ -167,6 +194,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const category = document.getElementById('guestCategorySelect').value;
             const plusOneAllowed = document.getElementById('plusOneAllowedCheck').checked;
 
+            const submitBtn = addGuestForm.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
+
             try {
                 const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/client/add-guest`, {
                     method: 'POST',
@@ -185,7 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     alert(`⚠️ Failed to add guest: ${result.message}`);
                 }
-            } catch (err) { alert('⚠️ Error processing request.'); }
+            } catch (err) { 
+                alert('⚠️ Error processing request.'); 
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
         });
     }
 
