@@ -1,5 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Views & Modals
+    // --- SCROLL ANIMATION OBSERVER ---
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        scrollObserver.observe(el);
+    });
+
+    // --- Views & Modals ---
     const publicShowcaseView = document.getElementById('publicShowcaseView');
     const protectedConsoleView = document.getElementById('protectedConsoleView');
 
@@ -17,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dashboard Data Nodes
     const displayCoupleNames = document.getElementById('displayCoupleNames');
     const guestTableBody = document.getElementById('guestTableBody');
-
     const statTotalLogged = document.getElementById('statTotalLogged');
     const statAttending = document.getElementById('statAttending');
     const statDeclined = document.getElementById('statDeclined');
@@ -65,16 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             loginError.style.display = 'none';
             const submitBtn = loginForm.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Authenticate Console ↗';
+            const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Login';
 
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Authenticating...`;
+                submitBtn.innerHTML = `Logging in...`;
             }
 
             // Warm-up alert timer if request takes longer than 3 seconds
             const slowServerTimer = setTimeout(() => {
-                loginError.innerHTML = `<i class="fas fa-bolt"></i> Server is waking up from idle mode, please wait...`;
+                loginError.innerHTML = `Server is waking up from idle mode, please wait...`;
                 loginError.style.display = 'block';
                 loginError.style.color = '#F59E0B'; // Amber notice
             }, 3000);
@@ -140,15 +154,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (displayCoupleNames) displayCoupleNames.textContent = `${event.venueName || 'Event'} Console`;
 
-            if (statTotalLogged) statTotalLogged.textContent = summary.totalGuestsLogged || '0';
-            if (statAttending) statAttending.textContent = summary.attendingCount || '0';
-            if (statDeclined) statDeclined.textContent = summary.declinedCount || '0';
-            if (statHeadcount) statHeadcount.textContent = summary.totalHeadcount || '0';
+            // Animate number counters dynamically
+            animateValue(statTotalLogged, 0, summary.totalGuestsLogged || 0, 1000);
+            animateValue(statAttending, 0, summary.attendingCount || 0, 1000);
+            animateValue(statDeclined, 0, summary.declinedCount || 0, 1000);
+            animateValue(statHeadcount, 0, summary.totalHeadcount || 0, 1000);
 
             renderGuestTable(guests);
         } catch (err) {
             console.error('Failed to load portal stats:', err);
         }
+    }
+    
+    // Number Animation Helper for KPIs
+    function animateValue(obj, start, end, duration) {
+        if (!obj) return;
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start);
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
     }
 
     // Render Table
@@ -172,10 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${g.plusOneAllowed ? `Yes (+${g.plusOneCount || 1})` : 'No'}</td>
                     <td>${escapeHTML(g.dietaryRestrictions) || '—'}</td>
                     <td>
-                        <button class="copy-btn" onclick="copyLink('${inviteUrl}')"><i class="far fa-copy"></i> Copy Link</button>
+                        <button class="copy-btn" onclick="copyLink('${inviteUrl}')">Copy Link</button>
                     </td>
                     <td>
-                        <button class="action-delete-btn" onclick="deleteGuest('${g._id}')" title="Delete Guest"><i class="fas fa-trash-alt"></i></button>
+                        <button class="action-delete-btn" onclick="deleteGuest('${g._id}')" title="Delete Guest">✕</button>
                     </td>
                 </tr>
             `;

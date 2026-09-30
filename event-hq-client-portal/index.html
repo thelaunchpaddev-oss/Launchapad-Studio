@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVENT HQ // Couple & Host Console</title>
+    <title>EVENT HQ // Client & Host Console</title>
     <link rel="icon" type="image/svg+xml" href="/Files/LaunchpadFAV.svg">
     <link rel="stylesheet" href="event-hq-client.css">
 
@@ -11,72 +11,178 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body class="editorial-engine">
 
-    <!-- Top Navigation -->
-    <header class="top-nav">
-        <div class="nav-container">
+    <!-- Premium Glassmorphism Navigation -->
+    <header class="hq-nav-header">
+        <div class="hq-nav-container">
             <a href="/" class="brand-logo">
                 <span class="logo-mark">/</span>
                 <span class="logo-type">EVENT<strong>HQ</strong></span>
             </a>
 
             <div class="nav-actions">
-                <a href="/" class="btn-link">← Return to Studio</a>
-                <button id="openAuthModalBtn" class="btn-primary-sm">Access Couple Console ↗</button>
-                <button id="logoutBtn" class="btn-exit" style="display: none;"><i class="fas fa-power-off"></i> Exit Console</button>
+                <a href="/" class="hq-back-link">
+                    <span class="arrow">←</span>
+                    <span class="text">Back to Launchpad</span>
+                </a>
+                
+                <button id="openAuthModalBtn" class="hq-btn-primary">
+                    Get Started
+                </button>
+                
+                <button id="logoutBtn" class="hq-btn-secondary" style="display: none;">
+                    Sign Out
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- Public Feature Preview / Landing Hero (Shown when logged out) -->
+    <!-- Public Feature Preview / Landing Hero -->
     <div id="publicShowcaseView" class="public-showcase">
         <section class="hero-showcase">
-            <div class="container hero-content">
-                <span class="eyebrow-tag">// EVENT MANAGEMENT ENGINE</span>
-                <h1>Effortless RSVP tracking & guest management for modern couples.</h1>
-                <p class="hero-sub">Welcome to the Event HQ Client Experience. Track real-time guest confirmations, issue personal digital pass links, manage entourage categories, and keep dietary restrictions organized from your phone.</p>
+            <div class="container hero-content reveal-on-scroll">
+                <span class="eyebrow-tag light-tag animate-up" style="animation-delay: 0.1s;">// EVENT MANAGEMENT ENGINE</span>
+                <h1 class="animate-up" style="animation-delay: 0.2s;">Effortless RSVP tracking & guest management for modern hosts.</h1>
+                <p class="hero-sub animate-up" style="animation-delay: 0.3s;">Welcome to the Event HQ Client Experience. Track real-time guest confirmations, issue personal digital pass links, manage entourage categories, and keep dietary restrictions organized directly from your phone.</p>
                 
-                <div class="hero-btn-row">
-                    <button id="heroAuthTrigger" class="btn-primary-lg">Sign In to Your Event Console ↗</button>
-                    <a href="#features" class="btn-secondary-lg">Explore Platform Features ↓</a>
+                <div class="hero-btn-row animate-up" style="animation-delay: 0.4s;">
+                    <button id="heroAuthTrigger" class="btn-primary-lg">Sign In to Your Event Console</button>
+                    <a href="#features" class="btn-secondary-lg light-outline">Explore Platform Features</a>
+                </div>
+            </div>
+            
+            <div class="scroll-indicator">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Designed For Every Occasion Section -->
+        <section class="occasions-section">
+            <div class="container">
+                <div class="section-header text-center reveal-on-scroll">
+                    <span class="eyebrow-tag">// VERSATILITY</span>
+                    <h2>Designed for every occasion</h2>
+                    <p class="header-sub">Whether it is an intimate gathering or a large-scale corporate summit, Event HQ adapts to your specific operational needs.</p>
+                </div>
+
+                <div class="occasions-grid">
+                    <div class="occasion-card reveal-on-scroll" style="transition-delay: 0.1s;">
+                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" alt="Weddings">
+                        <div class="occasion-label">Weddings & Milestones</div>
+                    </div>
+                    <div class="occasion-card reveal-on-scroll" style="transition-delay: 0.2s;">
+                        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&auto=format&fit=crop" alt="Corporate Events">
+                        <div class="occasion-label">Corporate Galas</div>
+                    </div>
+                    <div class="occasion-card reveal-on-scroll" style="transition-delay: 0.3s;">
+                        <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=800&auto=format&fit=crop" alt="Brand Launches">
+                        <div class="occasion-label">Brand Launches</div>
+                    </div>
+                    <div class="occasion-card reveal-on-scroll" style="transition-delay: 0.4s;">
+                        <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?q=80&w=800&auto=format&fit=crop" alt="Private Parties">
+                        <div class="occasion-label">Private Celebrations</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Feature Grid Showcase -->
+        <!-- How It Works Section -->
+        <section class="how-it-works-section">
+            <div class="container">
+                <div class="section-header text-center reveal-on-scroll">
+                    <span class="eyebrow-tag">// THE WORKFLOW</span>
+                    <h2>How the magic happens</h2>
+                </div>
+
+                <div class="steps-container">
+                    <div class="step-box reveal-on-scroll" style="transition-delay: 0.1s;">
+                        <div class="step-number">01</div>
+                        <h3>Create Your Console</h3>
+                        <p>We set up a secure, customized portal tailored to your event's branding and data requirements.</p>
+                    </div>
+                    <div class="step-box reveal-on-scroll" style="transition-delay: 0.2s;">
+                        <div class="step-number">02</div>
+                        <h3>Issue Digital Passes</h3>
+                        <p>Generate secure, personalized links for each guest, eliminating the need for easily lost paper tickets.</p>
+                    </div>
+                    <div class="step-box reveal-on-scroll" style="transition-delay: 0.3s;">
+                        <div class="step-number">03</div>
+                        <h3>Monitor Responses</h3>
+                        <p>Watch RSVPs, plus-one allocations, and dietary restrictions flow into your dashboard in real time.</p>
+                    </div>
+                    <div class="step-box reveal-on-scroll" style="transition-delay: 0.4s;">
+                        <div class="step-number">04</div>
+                        <h3>Frictionless Check-in</h3>
+                        <p>Export your manifest or use the live console at the door to check in VIPs and general guests instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Photographic Feature Grid Showcase -->
         <section id="features" class="features-section">
             <div class="container">
-                <div class="section-header text-center">
+                <div class="section-header text-center reveal-on-scroll">
                     <span class="eyebrow-tag">// PLATFORM CAPABILITIES</span>
-                    <h2>Everything you need for seamless event coordination</h2>
+                    <h2>Everything you need for seamless coordination</h2>
                 </div>
 
                 <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="f-icon"><i class="fas fa-user-check"></i></div>
-                        <h3>Real-Time RSVP Tracker</h3>
-                        <p>Instant analytics on confirmed guests, declines, and total headcounts including +1 allowances in one live feed.</p>
+                    <div class="feature-card reveal-on-scroll img-card" style="transition-delay: 0.1s;">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800&auto=format&fit=crop" class="feature-img-bg" alt="Event Crowd">
+                        <div class="feature-overlay"></div>
+                        <div class="feature-content">
+                            <h3>Real-Time RSVP Tracker</h3>
+                            <p>Instant analytics on confirmed guests, declines, and total headcounts including +1 allowances in one live feed.</p>
+                        </div>
                     </div>
 
-                    <div class="feature-card">
-                        <div class="f-icon"><i class="fas fa-link"></i></div>
-                        <h3>Personal Invitation Links</h3>
-                        <p>Generate one-click personal access links for each guest, bypassing physical ticket lost-and-found issues.</p>
+                    <div class="feature-card reveal-on-scroll img-card" style="transition-delay: 0.2s;">
+                        <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=800&auto=format&fit=crop" class="feature-img-bg" alt="Digital Invite">
+                        <div class="feature-overlay"></div>
+                        <div class="feature-content">
+                            <h3>Personal Invitation Links</h3>
+                            <p>Generate one-click personal access links for each guest, bypassing physical ticket lost-and-found issues.</p>
+                        </div>
                     </div>
 
-                    <div class="feature-card">
-                        <div class="f-icon"><i class="fas fa-utensils"></i></div>
-                        <h3>Dietary & Allergy Notes</h3>
-                        <p>Collect specific dietary preferences directly from guests during RSVP confirmation for easy caterer export.</p>
+                    <div class="feature-card reveal-on-scroll img-card" style="transition-delay: 0.3s;">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=800&auto=format&fit=crop" class="feature-img-bg" alt="Event Catering">
+                        <div class="feature-overlay"></div>
+                        <div class="feature-content">
+                            <h3>Dietary & Allergy Notes</h3>
+                            <p>Collect specific dietary preferences directly from guests during RSVP confirmation for easy caterer export.</p>
+                        </div>
                     </div>
 
-                    <div class="feature-card">
-                        <div class="f-icon"><i class="fas fa-users-cog"></i></div>
-                        <h3>Entourage & Category Badging</h3>
-                        <p>Separate VIPs, Entourage, and General Guests with visual status badges for effortless door check-in.</p>
+                    <div class="feature-card reveal-on-scroll img-card" style="transition-delay: 0.4s;">
+                        <img src="https://images.unsplash.com/photo-1561489413-985b06da5bee?q=80&w=800&auto=format&fit=crop" class="feature-img-bg" alt="VIP Access">
+                        <div class="feature-overlay"></div>
+                        <div class="feature-content">
+                            <h3>Category Badging</h3>
+                            <p>Separate VIPs, Entourage, and General Guests with visual status badges for effortless door check-in.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card reveal-on-scroll img-card" style="transition-delay: 0.5s;">
+                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop" class="feature-img-bg" alt="Event Check-in">
+                        <div class="feature-overlay"></div>
+                        <div class="feature-content">
+                            <h3>Smart Door Check-In</h3>
+                            <p>Equip your reception team with digital guest lists for instant, frictionless arrivals at the venue doors.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-card reveal-on-scroll img-card" style="transition-delay: 0.6s;">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop" class="feature-img-bg" alt="Analytics and Spreadsheets">
+                        <div class="feature-overlay"></div>
+                        <div class="feature-content">
+                            <h3>One-Click Export</h3>
+                            <p>Download your finalized guest manifest into clean, formatted spreadsheets for your event planners and caterers.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,14 +191,15 @@
 
     <!-- Protected Console Shell (Shown when logged in) -->
     <div id="protectedConsoleView" class="app-shell" style="display: none;">
-        <main class="content-container">
-            <div class="console-welcome-header">
-                <div>
-                    <span class="eyebrow-tag">// LIVE EVENT CONSOLE</span>
-                    <h2 id="displayCoupleNames">EVENT CONSOLE</h2>
-                </div>
+        <!-- Visual Header for the Console -->
+        <div class="console-hero-banner">
+            <div class="container console-welcome-header">
+                <span class="eyebrow-tag light-tag">// LIVE EVENT CONSOLE</span>
+                <h2 id="displayCoupleNames">EVENT CONSOLE</h2>
             </div>
+        </div>
 
+        <main class="content-container animate-up">
             <!-- KPI Summary Cards -->
             <section class="kpi-ribbon">
                 <div class="kpi-box blue">
@@ -120,7 +227,7 @@
                         <h3>GUEST INGESTION CONSOLE</h3>
                         <p class="panel-sub">Manage guest invites, issue tokens, and track responses.</p>
                     </div>
-                    <button id="openAddGuestModal" class="btn-primary-sm"><i class="fas fa-plus"></i> Add New Guest</button>
+                    <button id="openAddGuestModal" class="btn-primary-sm">Add New Guest</button>
                 </div>
                 <div class="table-wrapper">
                     <table>
@@ -144,34 +251,42 @@
         </main>
     </div>
 
-    <!-- Auth Modal Overlay -->
+    <!-- Auth Modal Overlay (UPDATED SPLIT LAYOUT) -->
     <div id="clientAuthModal" class="modal-backdrop" style="display: none;">
-        <div class="auth-card">
-            <div class="modal-header">
-                <h3>COUPLE PORTAL ACCESS</h3>
-                <button id="closeAuthModal" class="close-btn">✕</button>
+        <div class="auth-card split-modal animate-up">
+            <div class="auth-image-side">
+                <div class="auth-image-overlay">
+                    <h3>Welcome Back</h3>
+                    <p>Manage your event details seamlessly.</p>
+                </div>
             </div>
-            <p class="auth-sub">Enter your registered event credentials to access your live console.</p>
-            <form id="clientLoginForm">
-                <div class="form-group">
-                    <label for="loginEmail">REGISTERED EMAIL</label>
-                    <input type="email" id="loginEmail" placeholder="e.g. couple@event.com" required>
+            <div class="auth-form-side">
+                <div class="modal-header">
+                    <h3>CLIENT PORTAL ACCESS</h3>
+                    <button id="closeAuthModal" class="close-btn">✕</button>
                 </div>
-                <div class="form-group">
-                    <label for="loginPass">ACCESS PASSCODE</label>
-                    <input type="password" id="loginPass" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn-submit-form">Authenticate Console ↗</button>
-            </form>
-            <p id="loginError" class="error-log"></p>
+                <p class="auth-sub">Enter your registered event credentials to access your live console.</p>
+                <form id="clientLoginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">REGISTERED EMAIL</label>
+                        <input type="email" id="loginEmail" placeholder="e.g. host@event.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPass">ACCESS PASSCODE</label>
+                        <input type="password" id="loginPass" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit-form">Login</button>
+                </form>
+                <p id="loginError" class="error-log"></p>
+            </div>
         </div>
     </div>
 
     <!-- Add Guest Modal -->
     <div id="addGuestModal" class="modal-backdrop" style="display: none;">
-        <div class="modal-card">
+        <div class="modal-card animate-up">
             <div class="modal-header">
-                <h3>REGISTER NEW GUEST PROFILE</h3>
+                <h3>REGISTER NEW PROFILE</h3>
                 <button id="closeAddGuestModal" class="close-btn">✕</button>
             </div>
             <form id="addGuestForm">
@@ -187,13 +302,13 @@
                     <label for="guestCategorySelect">CATEGORY</label>
                     <select id="guestCategorySelect" required>
                         <option value="general" selected>General Guest Invite</option>
-                        <option value="entourage">Entourage Member Invite</option>
+                        <option value="entourage">VIP / Entourage Invite</option>
                     </select>
                 </div>
                 <label class="checkbox-label">
                     <input type="checkbox" id="plusOneAllowedCheck"> Allow +1 RSVP Allowance
                 </label>
-                <button type="submit" class="btn-submit-form">Generate Guest Token ↗</button>
+                <button type="submit" class="btn-submit-form">Generate Guest Token</button>
             </form>
         </div>
     </div>
