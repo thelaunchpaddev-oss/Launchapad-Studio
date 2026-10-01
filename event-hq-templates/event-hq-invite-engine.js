@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
+    const eventSlug = urlParams.get('event');
     const token = urlParams.get('token');
 
+    const errorContainer = document.getElementById('errorContainer');
     const guestGreeting = document.getElementById('guestGreeting');
     const eventTitle = document.getElementById('eventTitle');
     const eventDate = document.getElementById('eventDate');
@@ -21,13 +23,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dietaryInput = document.getElementById('dietaryInput');
     const rsvpMessage = document.getElementById('rsvpMessage');
 
-    if (!token) {
-        showError('Missing invitation token. Please check your personalized link.');
+    if (!token || !eventSlug) {
+        showError('Missing invitation parameters (slug or token). Please check your personalized link.');
         return;
     }
 
     try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/invite/verify-token/${token}`);
+        // Fetch guest profile and event details using event slug and token
+        const response = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/public/verify-invite?event=${eventSlug}&token=${token}`);
         const result = await response.json();
 
         if (!result.success) {
@@ -35,18 +38,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        const { guestName, rsvpStatus, plusOneAllowed, plusOneCount, dietaryRestrictions, eventDetails, inviteContent } = result.data;
+        const { event, guest } = result.data;
 
-        if (guestGreeting) guestGreeting.textContent = `Dear ${guestName},`;
-        if (eventTitle) eventTitle.textContent = `${eventDetails.slug.replace(/-/g, ' ').toUpperCase()}`;
-        if (eventDate) eventDate.textContent = new Date(eventDetails.eventDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        if (venueName) venueName.textContent = eventDetails.venueName;
-        if (venueAddress) venueAddress.textContent = eventDetails.venueAddress;
-        if (mapLink && eventDetails.googleMapsUrl) mapLink.href = eventDetails.googleMapsUrl;
-        if (dressCode) dressCode.textContent = inviteContent.dressCode || 'Formal Attire';
+        // --- DYNAMIC TEMPLATE CONFIGURATION ---
+        // Determines whether to load Regular config or Entourage config based on client's design selection
+        const isEntourageMode = (guest.selectedTemplate === 'entourage' || guest.category === 'entourage');
+        const activeConfig = isEntourageMode ? event.entourageConfig : event.generalConfig;
 
-        if (timelineContainer && inviteContent.scheduleTimeline) {
-            timelineContainer.innerHTML = inviteContent.scheduleTimeline.map(item => `
+        if (guestGreeting) guestGreeting.textContent = `Dear ${guest.guestName},`;
+        if (eventTitle) eventTitle.textContent = isEntourageMode ? "VIP ENTOURAGE INVITATION" : (event.venueName ? `${event.venueName} Celebration` : "CELEBRATION OF LOVE");
+        
+        if (eventDate) {
+            eventDate.textContent = new Date(event.eventDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        if (venueName) venueName.textContent = event.venueName;
+        if (venueAddress) venueAddress.textContent = event.venueAddress;
+        if (mapLink && event.googleMapsUrl) mapLink.href = event.googleMapsUrl;
+        if (dressCode) dressCode.textContent = activeConfig?.dressCode || (isEntourageMode ? 'Custom Entourage Attire' : 'Formal Attire');
+
+        if (timelineContainer && activeConfig?.scheduleTimeline) {
+            timelineContainer.innerHTML = activeConfig.scheduleTimeline.map(item => `
                 <div class="timeline-item">
                     <span class="time">${escapeHTML(item.time)}</span>
                     <span class="activity">${escapeHTML(item.activity)}</span>
@@ -55,29 +66,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // ⚡ CONDITIONAL ENTOURAGE RENDERING
-        if (inviteContent.isEntourage && entourageSection) {
+        if (isEntourageMode && entourageSection) {
             entourageSection.style.display = 'block';
-            if (entourageCallTime) entourageCallTime.textContent = inviteContent.callTime || 'Check entourage schedule';
-            if (entourageNotes) entourageNotes.textContent = inviteContent.customNotes || '';
+            if (entourageCallTime) entourageCallTime.textContent = event.entourageConfig?.callTime || 'Check entourage schedule';
+            if (entourageNotes) entourageNotes.textContent = event.entourageConfig?.customNotes || `Prep Location: ${event.entourageConfig?.prepLocation || 'See coordinator'}`;
         }
 
-        if (rsvpStatusSelect) rsvpStatusSelect.value = rsvpStatus || 'pending';
-        if (plusOneAllowed && plusOneGroup) {
+        if (rsvpStatusSelect) rsvpStatusSelect.value = guest.rsvpStatus || 'pending';
+        if (guest.plusOneAllowed && plusOneGroup) {
             plusOneGroup.style.display = 'block';
-            if (plusOneInput) plusOneInput.value = plusOneCount || 0;
+            if (plusOneInput) plusOneInput.value = guest.plusOneCount || 0;
         }
-        if (dietaryInput) dietaryInput.value = dietaryRestrictions || '';
+        if (dietaryInput) dietaryInput.value = guest.dietaryRestrictions || '';
 
         if (rsvpForm) {
             rsvpForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const payload = {
                     rsvpStatus: rsvpStatusSelect.value,
-                    plusOneCount: plusOneAllowed ? parseInt(plusOneInput.value, 10) || 0 : 0,
+                    plusOneCount: guest.plusOneAllowed ? parseInt(plusOneInput.value, 10) || 0 : 0,
                     dietaryRestrictions: dietaryInput.value.trim()
                 };
 
                 try {
+                    // Uses your existing token-based RSVP endpoint
                     const rsvpRes = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/invite/rsvp/${token}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },

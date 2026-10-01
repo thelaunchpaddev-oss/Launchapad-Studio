@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const guestName = document.getElementById('guestNameInput').value.trim();
             const email = document.getElementById('guestEmailInput').value.trim();
             const category = document.getElementById('guestCategorySelect').value;
+            const selectedTemplate = document.getElementById('guestTemplateSelect').value; // NEW
             const plusOneAllowed = document.getElementById('plusOneAllowedCheck').checked;
 
             const submitBtn = addGuestForm.querySelector('button[type="submit"]');
@@ -234,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${getToken()}`
                     },
-                    body: JSON.stringify({ guestName, email, category, plusOneAllowed })
+                    body: JSON.stringify({ guestName, email, category, plusOneAllowed, selectedTemplate }) // NEW
                 });
 
                 const result = await res.json();

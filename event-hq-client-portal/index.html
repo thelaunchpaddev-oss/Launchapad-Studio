@@ -251,7 +251,7 @@
         </main>
     </div>
 
-    <!-- Auth Modal Overlay (UPDATED SPLIT LAYOUT) -->
+    <!-- Auth Modal Overlay -->
     <div id="clientAuthModal" class="modal-backdrop" style="display: none;">
         <div class="auth-card split-modal animate-up">
             <div class="auth-image-side">
@@ -282,7 +282,7 @@
         </div>
     </div>
 
-    <!-- Add Guest Modal -->
+    <!-- Add Guest Modal (UPDATED WITH TEMPLATE SELECTOR) -->
     <div id="addGuestModal" class="modal-backdrop" style="display: none;">
         <div class="modal-card animate-up">
             <div class="modal-header">
@@ -303,6 +303,14 @@
                     <select id="guestCategorySelect" required>
                         <option value="general" selected>General Guest Invite</option>
                         <option value="entourage">VIP / Entourage Invite</option>
+                    </select>
+                </div>
+                <!-- NEW TEMPLATE DESIGN SELECTOR -->
+                <div class="form-group">
+                    <label for="guestTemplateSelect">ASSIGNED INVITATION DESIGN</label>
+                    <select id="guestTemplateSelect" required>
+                        <option value="regular" selected>Regular RSVP Design</option>
+                        <option value="entourage">Entourage Design</option>
                     </select>
                 </div>
                 <label class="checkbox-label">

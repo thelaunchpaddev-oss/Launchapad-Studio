@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearActiveViewState();
             tabEventHQ.classList.add('active');
             viewEventHQ.style.display = 'block';
-            populateTemplateDropdown();
+            populateTemplateDropdowns();
             fetchCouplesDirectory();
         });
     }
@@ -286,31 +286,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- DYNAMIC TEMPLATE LOADER FOR EVENT HQ PROVISION DROPDOWN ---
-    async function populateTemplateDropdown() {
-        const dropdown = document.getElementById('provTemplate');
-        if (!dropdown) return;
+    // --- SECURE ADMIN TEMPLATE LOADER FOR PROVISIONER DROPDOWNS ---
+    async function populateTemplateDropdowns() {
+        const regDropdown = document.getElementById('provRegularTemplate');
+        const entDropdown = document.getElementById('provEntourageTemplate');
+        if (!regDropdown || !entDropdown) return;
 
         try {
-            const response = await fetch(`${CONFIG.API_BASE_URL}/api/templates`);
+            // Securely fetch from admin endpoint so private templates remain hidden from public vault
+            const response = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/available-templates`, {
+                headers: { 'Authorization': `Bearer ${getSessionToken()}` }
+            });
             const result = await response.json();
 
-            if (result.success && result.data.length > 0) {
-                const eventTemplates = result.data.filter(t => t.category === 'invite');
-                
-                if (eventTemplates.length === 0) {
-                    dropdown.innerHTML = `<option value="" disabled selected>No 'invite' category templates found in system</option>`;
-                    return;
-                }
+            let optionsHTML = `<option value="">-- NONE (Use Single Default Template) --</option>`;
 
-                dropdown.innerHTML = eventTemplates.map(t => 
+            if (result.success && result.data.length > 0) {
+                optionsHTML += result.data.map(t => 
                     `<option value="${t.title.toLowerCase().replace(/\s+/g, '-')}">${escapeHTML(t.title)}</option>`
                 ).join('');
-            } else {
-                dropdown.innerHTML = `<option value="" disabled selected>No templates found in system</option>`;
             }
+
+            regDropdown.innerHTML = optionsHTML;
+            entDropdown.innerHTML = optionsHTML;
+
         } catch (err) {
-            dropdown.innerHTML = `<option value="" disabled selected>Error loading templates from API</option>`;
+            const errorHTML = `<option value="">-- NONE (Error loading templates) --</option>`;
+            regDropdown.innerHTML = errorHTML;
+            entDropdown.innerHTML = errorHTML;
         }
     }
 
@@ -353,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- PROVISION FORM SUBMIT WITH SEPARATE BRIDE & GROOM ---
+    // --- PROVISION FORM SUBMIT WITH DUAL TEMPLATES ---
     if (provisionForm) {
         provisionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -369,7 +372,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 venueName: document.getElementById('provVenueName').value.trim(),
                 venueAddress: document.getElementById('provVenueAddress').value.trim(),
                 googleMapsUrl: document.getElementById('provGoogleMapsUrl').value.trim(),
-                assignedTemplate: document.getElementById('provTemplate').value
+                regularTemplate: document.getElementById('provRegularTemplate').value,     
+                entourageTemplate: document.getElementById('provEntourageTemplate').value 
             };
 
             try {
@@ -443,7 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- GLOBAL ACTIONS: EDIT CREDENTIALS & TOGGLE LOCK ---
     window.editCoupleCredentials = async function(id, currentEmail) {
         const newEmail = prompt('Update Login Email:', currentEmail);
         const newPassword = prompt('Enter new password (leave blank to keep unchanged):');
