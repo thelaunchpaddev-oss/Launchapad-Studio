@@ -43,6 +43,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const provisionForm = document.getElementById('provisionCoupleForm');
     const provisionStatus = document.getElementById('provisionStatus');
+
+    // --- CUSTOM APP MODAL NOTIFICATION HOOKS ---
+    const appModalOverlay = document.getElementById('appModalOverlay');
+    const appModalTitle = document.getElementById('appModalTitle');
+    const appModalMessage = document.getElementById('appModalMessage');
+    const appModalCloseBtn = document.getElementById('appModalCloseBtn');
+
+    function showAppModal(title, message, isError = false) {
+        if (!appModalOverlay) return;
+        appModalTitle.textContent = title;
+        appModalTitle.style.color = isError ? 'var(--neon-red)' : 'var(--neon-blue)';
+        appModalMessage.innerHTML = message;
+        appModalOverlay.style.display = 'flex';
+    }
+
+    if (appModalCloseBtn && appModalOverlay) {
+        appModalCloseBtn.onclick = () => { appModalOverlay.style.display = 'none'; };
+        appModalOverlay.onclick = (e) => { if (e.target === appModalOverlay) appModalOverlay.style.display = 'none'; };
+    }
     
     const getSessionToken = () => localStorage.getItem('launcher_hq_session');
 
@@ -280,9 +299,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (tplModalOverlay) tplModalOverlay.style.display = 'none';
                     await fetchCMSCatalog(); 
                 } else {
-                    alert(`INGESTION REJECTED: ${result.message}`);
+                    showAppModal('INGESTION REJECTED', result.message, true);
                 }
-            } catch (err) { alert('NETWORK TRANSMISSION ERROR EXECUTING FILE UPLOAD'); }
+            } catch (err) { showAppModal('NETWORK ERROR', 'Error executing file upload.', true); }
         });
     }
 
@@ -298,25 +317,27 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await response.json();
 
-            let optionsHTML = `<option value="">-- NONE (Use Single Default Template) --</option>`;
+            let regOptions = `<option value="" disabled selected>-- Select Regular Template --</option>`;
+            let entOptions = `<option value="" selected>-- NONE (Use Single Default Template) --</option>`;
 
             if (result.success && result.data.length > 0) {
-                optionsHTML += result.data.map(t => 
+                const templateList = result.data.map(t => 
                     `<option value="${t.title.toLowerCase().replace(/\s+/g, '-')}">${escapeHTML(t.title)}</option>`
                 ).join('');
+                regOptions += templateList;
+                entOptions += templateList;
             }
 
-            regDropdown.innerHTML = optionsHTML;
-            entDropdown.innerHTML = optionsHTML;
+            regDropdown.innerHTML = regOptions;
+            entDropdown.innerHTML = entOptions;
 
         } catch (err) {
-            const errorHTML = `<option value="">-- NONE (Error loading templates) --</option>`;
-            regDropdown.innerHTML = errorHTML;
-            entDropdown.innerHTML = errorHTML;
+            regDropdown.innerHTML = `<option value="">Error loading templates</option>`;
+            entDropdown.innerHTML = `<option value="">Error loading templates</option>`;
         }
     }
 
-    // --- FETCH & RENDER PROVISIONED COUPLES DIRECTORY ---
+    // --- FETCH & RENDER PROVISIONED DIRECTORY WITH ICON-BASED ACTIONS & DELETE ---
     async function fetchCouplesDirectory() {
         const tableBody = document.getElementById('couplesTableBody');
         if (!tableBody) return;
@@ -326,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (!result.success || !result.data || result.data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" style="padding:1.5rem; text-align:center; color:var(--text-muted);">No couples provisioned yet.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="6" style="padding:1.5rem; text-align:center; color:var(--text-muted);">No event profiles provisioned yet.</td></tr>`;
                 return;
             }
 
@@ -341,21 +362,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${c.isLocked ? 'LOCKED' : 'ACTIVE'}
                         </span>
                     </td>
-                    <td style="padding:0.75rem; display:flex; gap:0.4rem;">
-                        <button class="copy-btn" onclick="editCoupleCredentials('${c._id}', '${escapeHTML(c.email)}')">Edit Auth</button>
-                        <button class="copy-btn" style="border-color:${c.isLocked ? '#00ff66' : '#ff3366'}; color:${c.isLocked ? '#00ff66' : '#ff3366'};" onclick="toggleCoupleLock('${c._id}')">
-                            ${c.isLocked ? 'Unlock' : 'Lock'}
-                        </button>
+                    <td style="padding:0.75rem; text-align:center;">
+                        <div style="display:inline-flex; gap:0.5rem; align-items:center;">
+                            <button title="Edit Authentication" class="icon-action-btn" onclick="editCoupleCredentials('${c._id}', '${escapeHTML(c.email)}')">
+                                <i class="fas fa-key"></i>
+                            </button>
+                            <button title="${c.isLocked ? 'Unlock Account' : 'Lock Account'}" class="icon-action-btn" style="color:${c.isLocked ? '#00ff66' : '#ffbd2e'};" onclick="toggleCoupleLock('${c._id}')">
+                                <i class="fas ${c.isLocked ? 'fa-lock-open' : 'fa-lock'}"></i>
+                            </button>
+                            <button title="Delete Event Profile" class="icon-action-btn delete" onclick="deleteEventProfile('${c._id}')">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
 
         } catch (err) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="padding:1.5rem; text-align:center; color:#ff3366;">Error retrieving couples directory.</td></tr>`;
+            tableBody.innerHTML = `<tr><td colspan="6" style="padding:1.5rem; text-align:center; color:#ff3366;">Error retrieving event directory.</td></tr>`;
         }
     }
 
-    // --- PROVISION FORM SUBMIT WITH OPTIONAL DUAL TEMPLATES ---
+    // --- PROVISION FORM SUBMIT WITH GENERAL EVENT TYPES ---
     if (provisionForm) {
         provisionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -365,6 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const entourageVal = document.getElementById('provEntourageTemplate').value;
 
             const payload = {
+                eventType: document.getElementById('provEventType').value,
                 email: document.getElementById('provEmail').value.trim(),
                 password: document.getElementById('provPassword').value,
                 brideName: document.getElementById('provBrideName').value.trim(),
@@ -375,7 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 venueAddress: document.getElementById('provVenueAddress').value.trim(),
                 googleMapsUrl: document.getElementById('provGoogleMapsUrl').value.trim(),
                 regularTemplate: regularVal,     
-                entourageTemplate: entourageVal || regularVal // Fallback to regular if entourage/VIP is blank
+                entourageTemplate: entourageVal || regularVal 
             };
 
             try {
@@ -388,20 +417,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (result.success) {
-                    provisionStatus.style.color = '#00ff66';
-                    provisionStatus.textContent = `SUCCESS: Provisioned portal for ${result.data.user.coupleNames}`;
-                    provisionStatus.style.display = 'block';
+                    showAppModal('SUCCESSFULLY PROVISIONED', `Created event portal for <strong>${result.data.user.coupleNames}</strong>.`);
                     provisionForm.reset();
                     fetchCouplesDirectory();
                 } else {
-                    provisionStatus.style.color = '#ff3366';
-                    provisionStatus.textContent = `REJECTED: ${result.message}`;
-                    provisionStatus.style.display = 'block';
+                    showAppModal('PROVISION REJECTED', result.message, true);
                 }
             } catch (err) {
-                provisionStatus.style.color = '#ff3366';
-                provisionStatus.textContent = 'ERROR: Unable to provision couple profile.';
-                provisionStatus.style.display = 'block';
+                showAppModal('SYSTEM ERROR', 'Unable to provision event profile.', true);
             }
         });
     }
@@ -427,9 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
 
                 if (result.success) {
-                    passStatus.style.color = '#00ff00';
-                    passStatus.textContent = 'SUCCESS: Passkey rotated in database core. Logging out...';
-                    passStatus.style.display = 'block';
+                    showAppModal('PASSKEY ROTATED', 'Security passkey updated successfully in core database. Logging out...');
                     passForm.reset();
 
                     setTimeout(() => {
@@ -437,14 +458,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.reload();
                     }, 2000);
                 } else {
-                    passStatus.style.color = '#ff3366';
-                    passStatus.textContent = `REJECTED: ${result.message}`;
-                    passStatus.style.display = 'block';
+                    showAppModal('ROTATION REJECTED', result.message, true);
                 }
             } catch (err) {
-                passStatus.style.color = '#ff3366';
-                passStatus.textContent = 'ERROR: Failed to transmit security update to server core.';
-                passStatus.style.display = 'block';
+                showAppModal('TRANSMISSION ERROR', 'Failed to transmit security update to server core.', true);
             }
         });
     }
@@ -469,25 +486,39 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await res.json();
             if (result.success) {
-                alert('SUCCESS: Credentials updated.');
+                showAppModal('UPDATED', 'Credentials updated successfully.');
                 fetchCouplesDirectory();
             } else {
-                alert(`ERROR: ${result.message}`);
+                showAppModal('ERROR', result.message, true);
             }
-        } catch (err) { alert('ERROR updating credentials'); }
+        } catch (err) { showAppModal('ERROR', 'Error updating credentials.', true); }
     };
 
     window.toggleCoupleLock = async function(id) {
-        if (!confirm('Toggle lock status for this couple account?')) return;
         try {
             const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/toggle-lock/${id}`, { method: 'PUT' });
             const result = await res.json();
             if (result.success) {
                 fetchCouplesDirectory();
             } else {
-                alert(`ERROR: ${result.message}`);
+                showAppModal('ERROR', result.message, true);
             }
-        } catch (err) { alert('ERROR toggling lock status'); }
+        } catch (err) { showAppModal('ERROR', 'Error toggling lock status.', true); }
+    };
+
+    // --- DELETE EVENT PROFILE FUNCTION ---
+    window.deleteEventProfile = async function(id) {
+        if (!confirm('Are you sure you want to permanently delete this event profile and all its associated guest records?')) return;
+        try {
+            const res = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/delete-couple/${id}`, { method: 'DELETE' });
+            const result = await res.json();
+            if (result.success) {
+                showAppModal('DELETED', 'Event profile and records purged cleanly.');
+                fetchCouplesDirectory();
+            } else {
+                showAppModal('ERROR', result.message, true);
+            }
+        } catch (err) { showAppModal('ERROR', 'Failed to delete event profile.', true); }
     };
 
     window.purgeClientBrief = async function(id) {

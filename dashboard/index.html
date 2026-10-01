@@ -6,6 +6,8 @@
     <title>LAUNCHER STUDIO // Ops Command</title>
     <link rel="icon" type="image/svg+xml" href="/Files/LaunchpadFAV.svg">
     <link rel="stylesheet" href="dashboard.css">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -18,6 +20,17 @@
                 <button type="submit" class="btn-auth-submit">Decrypt Console ↗</button>
             </form>
             <p id="authGateError" class="auth-error-log"></p>
+        </div>
+    </div>
+
+    <!-- CUSTOM APP MODAL NOTIFICATION OVERLAY -->
+    <div id="appModalOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content-card" style="max-width: 420px; text-align: center;">
+            <div class="modal-header-row" style="justify-content: center; border-bottom: none; margin-bottom: 0.5rem;">
+                <h3 id="appModalTitle" style="color: var(--neon-blue);">NOTIFICATION</h3>
+            </div>
+            <p id="appModalMessage" style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 1.5rem;"></p>
+            <button id="appModalCloseBtn" class="btn-deploy" style="width: 100%;">ACKNOWLEDGE</button>
         </div>
     </div>
 
@@ -121,48 +134,60 @@
 
             <div id="viewEventHQ" style="display: none;">
                 <header>
-                    <h1>EVENT HQ // COUPLE PROVISIONING SUITE</h1>
+                    <h1>EVENT HQ // GENERAL EVENT PROVISIONING SUITE</h1>
                 </header>
 
                 <div class="event-hq-grid-layout">
-                    <!-- LEFT COLUMN: LIVE PROVISIONED COUPLES TABLE -->
+                    <!-- LEFT COLUMN: LIVE PROVISIONED DIRECTORY -->
                     <div class="catalog-display-vault">
-                        <h3>PROVISIONED COUPLES DIRECTORY</h3>
+                        <h3>PROVISIONED EVENTS DIRECTORY</h3>
                         <div class="table-wrapper" style="overflow-x:auto; margin-top: 1rem;">
                             <table style="width:100%; text-align:left; border-collapse:collapse; font-size:0.85rem;">
                                 <thead>
                                     <tr style="border-bottom:1px solid var(--border-line); color:var(--text-muted); font-size:0.75rem; text-transform:uppercase;">
-                                        <th style="padding:0.75rem;">Couple</th>
+                                        <th style="padding:0.75rem;">Event / Host Profile</th>
                                         <th style="padding:0.75rem;">Login Email</th>
                                         <th style="padding:0.75rem;">Slug</th>
                                         <th style="padding:0.75rem;">Guests</th>
                                         <th style="padding:0.75rem;">Status</th>
-                                        <th style="padding:0.75rem;">Actions</th>
+                                        <th style="padding:0.75rem; text-align:center;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="couplesTableBody">
-                                    <tr><td colspan="6" style="padding:1.5rem; text-align:center; color:var(--text-muted);">Loading couple directory...</td></tr>
+                                    <tr><td colspan="6" style="padding:1.5rem; text-align:center; color:var(--text-muted);">Loading event directory...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- RIGHT COLUMN: PROVISION FORM -->
+                    <!-- RIGHT COLUMN: PROVISION FORM WITH EVENT TYPE SELECTOR -->
                     <div class="security-features-layout" style="margin:0;">
                         <div class="security-lock-card">
-                            <div class="security-card-header-tag">[ ACC-02 // PROVISION EVENT ]</div>
-                            <h3>PROVISION NEW COUPLE PORTAL</h3>
+                            <div class="security-card-header-tag">[ ACC-02 // GENERAL PROVISIONER ]</div>
+                            <h3>PROVISION NEW EVENT PORTAL</h3>
                             
                             <form id="provisionCoupleForm" class="cms-form-container">
-                                <input type="email" id="provEmail" placeholder="Couple Email (Login ID)..." required>
+                                <!-- EVENT TYPE SELECTOR -->
+                                <div style="display:flex; flex-direction:column; gap:0.3rem;">
+                                    <label style="font-size:0.7rem; color:var(--text-muted); font-family:monospace;">SELECT INVITATION / EVENT TYPE:</label>
+                                    <select id="provEventType" required>
+                                        <option value="" disabled selected>-- Select Event Classification --</option>
+                                        <option value="wedding">💍 Wedding & Milestones</option>
+                                        <option value="birthday">🎂 Birthday Celebration</option>
+                                        <option value="corporate">🏢 Corporate Gala / Summit</option>
+                                        <option value="private">✨ Private Party / Gathering</option>
+                                    </select>
+                                </div>
+
+                                <input type="email" id="provEmail" placeholder="Host Login Email ID..." required>
                                 <input type="password" id="provPassword" placeholder="Access Passcode..." required>
                                 
                                 <div style="display:flex; gap:0.5rem;">
-                                    <input type="text" id="provBrideName" placeholder="Bride Name..." required style="width:50%;">
-                                    <input type="text" id="provGroomName" placeholder="Groom Name..." required style="width:50%;">
+                                    <input type="text" id="provBrideName" placeholder="Host / Principal 1..." required style="width:50%;">
+                                    <input type="text" id="provGroomName" placeholder="Host / Principal 2 (Opt.)..." style="width:50%;">
                                 </div>
 
-                                <input type="text" id="provSlug" placeholder="URL Slug (e.g., alex-and-maria)..." required>
+                                <input type="text" id="provSlug" placeholder="URL Slug (e.g., mark-turns-30)..." required>
                                 <input type="date" id="provEventDate" required>
                                 <input type="text" id="provVenueName" placeholder="Venue Name..." required>
                                 <input type="text" id="provVenueAddress" placeholder="Venue Address..." required>
@@ -179,11 +204,11 @@
                                 <div style="display:flex; flex-direction:column; gap:0.3rem;">
                                     <label style="font-size:0.7rem; color:var(--text-muted); font-family:monospace;">ENTOURAGE / VIP TEMPLATE:</label>
                                     <select id="provEntourageTemplate">
-                                        <option value="" disabled selected>Loading system templates...</option>
+                                        <option value="" selected>-- NONE (Use Single Default Template) --</option>
                                     </select>
                                 </div>
 
-                                <button type="submit" class="btn-deploy">CREATE COUPLE PROFILE ↗</button>
+                                <button type="submit" class="btn-deploy">CREATE EVENT PROFILE ↗</button>
                             </form>
                             <p id="provisionStatus" class="security-status-log" style="display: none;"></p>
                         </div>
