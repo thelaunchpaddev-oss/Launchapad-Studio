@@ -293,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!regDropdown || !entDropdown) return;
 
         try {
-            // Securely fetch from admin endpoint so private templates remain hidden from public vault
             const response = await fetch(`${CONFIG.API_BASE_URL}/api/event-hq/admin/available-templates`, {
                 headers: { 'Authorization': `Bearer ${getSessionToken()}` }
             });
@@ -356,11 +355,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- PROVISION FORM SUBMIT WITH DUAL TEMPLATES ---
+    // --- PROVISION FORM SUBMIT WITH OPTIONAL DUAL TEMPLATES ---
     if (provisionForm) {
         provisionForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             provisionStatus.style.display = 'none';
+
+            const regularVal = document.getElementById('provRegularTemplate').value;
+            const entourageVal = document.getElementById('provEntourageTemplate').value;
 
             const payload = {
                 email: document.getElementById('provEmail').value.trim(),
@@ -372,8 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 venueName: document.getElementById('provVenueName').value.trim(),
                 venueAddress: document.getElementById('provVenueAddress').value.trim(),
                 googleMapsUrl: document.getElementById('provGoogleMapsUrl').value.trim(),
-                regularTemplate: document.getElementById('provRegularTemplate').value,     
-                entourageTemplate: document.getElementById('provEntourageTemplate').value 
+                regularTemplate: regularVal,     
+                entourageTemplate: entourageVal || regularVal // Fallback to regular if entourage/VIP is blank
             };
 
             try {
